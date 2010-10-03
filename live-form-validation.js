@@ -193,7 +193,7 @@ nette.validateForm = function(sender) {
 	var form = sender.form || sender;
 	liveForm.forms[form.id].hasError = false;
 
-	if (form['nette-submittedBy'] && form.elements[form['nette-submittedBy']] && form.elements[form['nette-submittedBy']].getAttribute('formnovalidate')) {
+	if (form['nette-submittedBy'] && form.elements[form['nette-submittedBy']] && form.elements[form['nette-submittedBy']].getAttribute('formnovalidate') !== null) {
 		return true;
 	}
 	var ok = true;
