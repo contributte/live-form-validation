@@ -42,7 +42,7 @@ liveForm.removeError = function(el) {
 		return;
 	}
 	if(err_el) {
-		err_el.parentElement.removeChild(el);
+		err_el.parentNode.removeChild(el);
 	}
 }
 
@@ -81,7 +81,7 @@ liveForm.getMessageElement = function(el) {
 	if(!error) {
 		error = document.createElement(this.options.messageTag);
 		error.id = id;
-		el.parentElement.appendChild(error);
+		el.parentNode.appendChild(error);
 	}
 	if(el.style.display == 'none')
 		error.style.display = 'none';
