@@ -1,5 +1,5 @@
 /**
- * Live Form Validation for Nette 1.0
+ * Live Form Validation for Nette 2.0
  *
  * @author  Radek Ježdík, David Grudl
  * @license http://nette.org/license  Nette license
