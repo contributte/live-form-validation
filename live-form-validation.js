@@ -193,7 +193,7 @@ nette.validateForm = function(sender) {
 	var form = sender.form || sender;
 	liveForm.forms[form.id].hasError = false;
 
-	if (form['nette-submittedBy'] && form.elements[form['nette-submittedBy']] && form.elements[form['nette-submittedBy']].getAttribute('formnovalidate') !== null) {
+	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		return true;
 	}
 	var ok = true;
@@ -264,6 +264,9 @@ nette.validateRule = function(elem, op, arg) {
 		} catch (e) {}
 		return;
 
+	case ':pattern':
+		return (new RegExp(arg)).test(val);
+
 	case ':integer':
 		return /^-?[0-9]+$/.test(val);
 
@@ -274,7 +277,7 @@ nette.validateRule = function(elem, op, arg) {
 		return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
 
 	case ':submitted':
-		return elem.form['nette-submittedBy'] === elem.name;
+		return elem.form['nette-submittedBy'] === elem;
 	}
 	return null;
 };
@@ -308,7 +311,7 @@ nette.toggleControl = function(elem, rules, firsttime) {
 			has = true;
 			if (firsttime) {
 				if (!el.nodeName) { // radio
-					for (var i in el) {
+					for (var i = 0; i < el.length; i++) {
 						el[i].onclick = function() {nette.toggleForm(elem.form);};
 					}
 				} else if (el.nodeName.toLowerCase() === 'select') {
@@ -335,6 +338,8 @@ nette.toggle = function(id, visible) {
 
 
 nette.initForm = function(form) {
+	form.noValidate = true;
+	
 	liveForm.forms[form.id] = {hasError: false};
 
 	form.onsubmit = function() {
@@ -344,7 +349,7 @@ nette.initForm = function(form) {
 	form.onclick = function(e) {
 		e = e || event;
 		var target = e.target || e.srcElement;
-		form['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target.name : null;
+		form['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target : null;
 	};
 
 	for (var i = 0; i < form.elements.length; i++) {
@@ -359,9 +364,9 @@ nette.initForm = function(form) {
 		}
 
 		for (i = 0, elms = form.getElementsByTagName('select'); i < elms.length; i++) {
-			elms[i].onmousewheel = function() {return false};	// prevents accidental change in IE
+			Nette.addEvent(elms[i], 'mousewheel', function() { return false; }); // prevents accidental change in IE
 			if (labels[elms[i].htmlId]) {
-				labels[elms[i].htmlId].onclick = function() {document.getElementById(this.htmlFor).focus();return false}; // prevents deselect in IE 5 - 6
+				Nette.addEvent(labels[elms[i].htmlId], 'click', function() { document.getElementById(this.htmlFor).focus(); return false; }); // prevents deselect in IE 5 - 6
 			}
 		}
 	}
