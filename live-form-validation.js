@@ -62,10 +62,9 @@ liveForm.showValid = function(el) {
 
 // if needed CHANGE these handlers to use jQuery events instead
 liveForm.setUpHandlers = function(el) {
-	var handler = function(el) {
-		if(el.target)
-			el = el.target;
-		nette.validateControl(el);
+	var handler = function(event) {
+		event = event || window.event;
+		nette.validateControl(event.target ? event.target : event.srcElement);
 	};
 
 	el.onchange = handler;
@@ -73,7 +72,7 @@ liveForm.setUpHandlers = function(el) {
 	el.onkeyup = function(event) {
 		event = event || window.event;
 		if(event.keyCode !== 9)
-			handler(event.target ? event.target : event.srcElement);
+			handler(event);
 	};
 }
 
