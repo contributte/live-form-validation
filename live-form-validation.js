@@ -60,6 +60,7 @@ liveForm.showValid = function(el) {
 	return showValid;
 }
 
+// if needed CHANGE these handlers to use jQuery events instead
 liveForm.setUpHandlers = function(el) {
 	var handler = function(el) {
 		if(el.target)
@@ -70,8 +71,9 @@ liveForm.setUpHandlers = function(el) {
 	el.onchange = handler;
 	el.onblur = handler;
 	el.onkeyup = function(event) {
+		event = event || window.event;
 		if(event.keyCode !== 9)
-			handler(event.target);
+			handler(event.target ? event.target : event.srcElement);
 	};
 }
 
