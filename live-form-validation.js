@@ -363,7 +363,7 @@ Nette.initForm = function(form) {
 	Nette.addEvent(form, 'click', function(e) {
 		e = e || event;
 		var target = e.target || e.srcElement;
-		form['Nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target : null;
+		form['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target : null;
 	});
 
 	for (var i = 0; i < form.elements.length; i++) {
@@ -371,15 +371,18 @@ Nette.initForm = function(form) {
 	}
 
 	if (/MSIE/.exec(navigator.userAgent)) {
-		var labels = {};
+		var labels = {},
+			wheelHandler = function() { return false; },
+			clickHandler = function() { document.getElementById(this.htmlFor).focus(); return false; };
+
 		for (i = 0, elms = form.getElementsByTagName('label'); i < elms.length; i++) {
 			labels[elms[i].htmlFor] = elms[i];
 		}
 
 		for (i = 0, elms = form.getElementsByTagName('select'); i < elms.length; i++) {
-			Nette.addEvent(elms[i], 'mousewheel', function() { return false }); // prevents accidental change in IE
+			Nette.addEvent(elms[i], 'mousewheel', wheelHandler); // prevents accidental change in IE
 			if (labels[elms[i].htmlId]) {
-				Nette.addEvent(labels[elms[i].htmlId], 'click', function() { document.getElementById(this.htmlFor).focus(); return false }); // prevents deselect in IE 5 - 6
+				Nette.addEvent(labels[elms[i].htmlId], 'click', clickHandler); // prevents deselect in IE 5 - 6
 			}
 		}
 	}
@@ -387,5 +390,7 @@ Nette.initForm = function(form) {
 
 
 Nette.addEvent(window, 'load', function () {
-	for (var i = 0; i < document.forms.length; i++) Nette.initForm(document.forms[i]);
+	for (var i = 0; i < document.forms.length; i++) {
+		Nette.initForm(document.forms[i]);
+	}
 });
