@@ -235,67 +235,88 @@ Nette.validateRule = function(elem, op, arg) {
 	var val = Nette.getValue(elem);
 
 	if (elem.getAttribute) {
-		if (val === elem.getAttribute('data-nette-empty-value')) val = null;
+		if (val === elem.getAttribute('data-nette-empty-value')) { val = ''; }
 	}
 
-	switch (op) {
-	case ':filled':
+	if (op.charAt(0) === ':') {
+		op = op.substr(1);
+	}
+	op = op.replace('::', '_');
+	return Nette.validators[op] ? Nette.validators[op](elem, arg, val) : null;
+};
+
+
+Nette.validators = {
+	filled: function(elem, arg, val) {
 		return val !== '' && val !== false && val !== null;
+	},
 
-	case ':valid':
+	valid: function(elem, arg, val) {
 		return Nette.validateControl(elem, null, true);
+	},
 
-	case ':equal':
-		arg = arg instanceof Array ? arg : [arg];
-		for (var i in arg) {
-			if (val == (arg[i].control ? Nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) return true;
+	equal: function(elem, arg, val) {
+		if (arg === undefined) {
+			return null;
+		}
+		arg = Nette.isArray(arg) ? arg : [arg];
+		for (var i = 0, len = arg.length; i < len; i++) {
+			if (val == (arg[i].control ? Nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) {
+				return true;
+			}
 		}
 		return false;
+	},
 
-	case ':minLength':
+	minLength: function(elem, arg, val) {
 		return val.length >= arg;
+	},
 
-	case ':maxLength':
+	maxLength: function(elem, arg, val) {
 		return val.length <= arg;
+	},
 
-	case ':length':
-		if (typeof arg !== 'object') {
-			arg = [arg, arg];
-		}
+	length: function(elem, arg, val) {
+		arg = Nette.isArray(arg) ? arg : [arg, arg];
 		return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
+	},
 
-	case ':email':
+	email: function(elem, arg, val) {
 		return (/^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i).test(val);
+	},
 
-	case ':url':
+	url: function(elem, arg, val) {
 		return (/^.+\.[a-z]{2,6}(\/.*)?$/i).test(val);
+	},
 
-	case ':regexp':
-		var parts = arg.match(/^\/(.*)\/([imu]*)$/);
-		if (parts) try {
+	regexp: function(elem, arg, val) {
+		var parts = typeof arg === 'string' ? arg.match(/^\/(.*)\/([imu]*)$/) : false;
+		if (parts) { try {
 			return (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
-		} catch (e) {}
-		return;
+		} catch (e) {} }
+	},
 
-	case ':pattern':
+	pattern: function(elem, arg, val) {
 		try {
-			return (new RegExp('^(' + arg + ')$')).test(val);
- 		} catch (e) {}
-		return null;
+			return typeof arg === 'string' ? (new RegExp('^(' + arg + ')$')).test(val) : null;
+		} catch (e) {}
+	},
 
-	case ':integer':
+	integer: function(elem, arg, val) {
 		return (/^-?[0-9]+$/).test(val);
+	},
 
-	case ':float':
+	float: function(elem, arg, val) {
 		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
+	},
 
-	case ':range':
-		return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
+	range: function(elem, arg, val) {
+		return Nette.isArray(arg) ? ((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
+	},
 
-	case ':submitted':
+	submitted: function(elem, arg, val) {
 		return elem.form['nette-submittedBy'] === elem;
 	}
-	return null;
 };
 
 
@@ -310,7 +331,7 @@ Nette.toggleForm = function(form) {
 
 Nette.toggleControl = function(elem, rules, firsttime) {
 	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
-	var has = false, handler = function() { Nette.toggleForm(elem.form); };
+	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() { Nette.toggleForm(elem.form); };
 	
 	for (var id in rules) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
@@ -338,7 +359,7 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 				}
 			}
 			for (var id2 in rule.toggle || []) {
-				Nette.toggle(id2, success ? rule.toggle[id2] : !rule.toggle[id2]);
+				if (__hasProp.call(rule.toggle, id2)) { Nette.toggle(id2, success ? rule.toggle[id2] : !rule.toggle[id2]); }
 			}
 		}
 	}
@@ -389,6 +410,11 @@ Nette.initForm = function(form) {
 			}
 		}
 	}
+};
+
+
+Nette.isArray = function(arg) {
+	return Object.prototype.toString.call(arg) === '[object Array]';
 };
 
 
