@@ -2,7 +2,7 @@
  * Live Form Validation for Nette 2.0
  *
  * @author  Radek Ježdík, David Grudl
- * @license http://Nette.org/license  Nette license
+ * @license New BSD License
  */
 
 var LiveForm = {
