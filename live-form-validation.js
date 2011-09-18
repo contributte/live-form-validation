@@ -392,6 +392,7 @@ Nette.initForm = function(form) {
 
 	for (var i = 0; i < form.elements.length; i++) {
 		Nette.toggleControl(form.elements[i], null, true);
+		liveForm.setUpHandlers(form.elements[i]);
 	}
 
 	if (/MSIE/.exec(navigator.userAgent)) {
