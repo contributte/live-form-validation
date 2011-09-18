@@ -5,7 +5,7 @@
  * @license http://Nette.org/license  Nette license
  */
 
-var liveForm = {
+var LiveForm = {
 	options: {
 		controlErrorClass: 'form-control-error',
 		errorMessageClass: 'form-error-message',
@@ -18,7 +18,7 @@ var liveForm = {
 	forms: { }
 };
 
-liveForm.addError = function(el, message) {
+LiveForm.addError = function(el, message) {
 	if(!this.forms[el.form.id].hasError) {
 		this.forms[el.form.id].hasError = true;
 	}
@@ -33,7 +33,7 @@ liveForm.addError = function(el, message) {
 	error.innerText = message;
 }
 
-liveForm.removeError = function(el) {
+LiveForm.removeError = function(el) {
 	this.removeClass(el, this.options.controlErrorClass);
 	var err_el = document.getElementById(el.id + this.options.messageIdPostfix);
 	if(this.options.showValid && this.showValid(el)) {
@@ -46,7 +46,7 @@ liveForm.removeError = function(el) {
 	}
 }
 
-liveForm.showValid = function(el) {
+LiveForm.showValid = function(el) {
 	var showValid = true;
 	if(el.type) {
 		var type = el.type.toLowerCase();
@@ -61,7 +61,7 @@ liveForm.showValid = function(el) {
 }
 
 // if needed CHANGE these handlers to use jQuery events instead
-liveForm.setUpHandlers = function(el) {
+LiveForm.setUpHandlers = function(el) {
 	var handler = function(event) {
 		event = event || window.event;
 		Nette.validateControl(event.target ? event.target : event.srcElement);
@@ -76,7 +76,7 @@ liveForm.setUpHandlers = function(el) {
 	};
 }
 
-liveForm.getMessageElement = function(el) {
+LiveForm.getMessageElement = function(el) {
 	id = el.id + this.options.messageIdPostfix;
 	var error = document.getElementById(id)
 	if(!error) {
@@ -91,7 +91,7 @@ liveForm.getMessageElement = function(el) {
 	return error;
 }
 
-liveForm.addClass = function(el, className) {
+LiveForm.addClass = function(el, className) {
 	if(!el.className) {
 		el.className = className;
 	} else if(!this.hasClass(el, className)) {
@@ -99,13 +99,13 @@ liveForm.addClass = function(el, className) {
 	}
 }
 
-liveForm.hasClass = function(el, className) {
+LiveForm.hasClass = function(el, className) {
 	if(el.className)
 		return el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
 	return false;
 }
 
-liveForm.removeClass = function(el, className) {
+LiveForm.removeClass = function(el, className) {
 	if(this.hasClass(el, className)) {
 		var reg = new RegExp('(\\s|^)'+ className + '(\\s|$)');
 		var m = el.className.match(reg);
@@ -196,7 +196,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 		}
 	}
 	if (!onlyCheck) {
-		liveForm.removeError(elem);
+		LiveForm.removeError(elem);
 	}
 	return true;
 };
@@ -204,7 +204,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender;
-	liveForm.forms[form.id].hasError = false;
+	LiveForm.forms[form.id].hasError = false;
 
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		return true;
@@ -224,10 +224,10 @@ Nette.validateForm = function(sender) {
 
 
 Nette.addError = function(elem, message) {
-	if (elem.focus && !liveForm.forms[elem.form.id].hasError) {
+	if (elem.focus && !LiveForm.forms[elem.form.id].hasError) {
 		elem.focus();
 	}
-	liveForm.addError(elem, message);
+	LiveForm.addError(elem, message);
 };
 
 
@@ -378,7 +378,7 @@ Nette.toggle = function(id, visible) {
 Nette.initForm = function(form) {
 	form.noValidate = true;
 	
-	liveForm.forms[form.id] = {hasError: false};
+	LiveForm.forms[form.id] = {hasError: false};
 
 	Nette.addEvent(form, 'submit', function() {
 		return Nette.validateForm(form);
@@ -392,7 +392,7 @@ Nette.initForm = function(form) {
 
 	for (var i = 0; i < form.elements.length; i++) {
 		Nette.toggleControl(form.elements[i], null, true);
-		liveForm.setUpHandlers(form.elements[i]);
+		LiveForm.setUpHandlers(form.elements[i]);
 	}
 
 	if (/MSIE/.exec(navigator.userAgent)) {
