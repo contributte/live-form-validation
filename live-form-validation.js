@@ -30,7 +30,7 @@ LiveForm.addError = function(el, message) {
 	}
 
 	var error = this.getMessageElement(el);
-	error.innerText = message;
+	error.innerHTML = message;
 }
 
 LiveForm.removeError = function(el) {
