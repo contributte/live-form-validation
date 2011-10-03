@@ -306,7 +306,7 @@ Nette.validators = {
 		return (/^-?[0-9]+$/).test(val);
 	},
 
-	float: function(elem, arg, val) {
+	'float': function(elem, arg, val) {
 		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
 	},
 
