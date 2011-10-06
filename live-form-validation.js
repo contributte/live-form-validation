@@ -87,7 +87,7 @@ LiveForm.getMessageElement = function(el) {
 	if(el.style.display == 'none')
 		error.style.display = 'none';
 	error.className = this.options.errorMessageClass;
-	error.innerText = '';
+	error.innerHTML = '';
 	return error;
 }
 
@@ -242,6 +242,7 @@ Nette.validateRule = function(elem, op, arg) {
 		op = op.substr(1);
 	}
 	op = op.replace('::', '_');
+        op = op.replace('\\', '');
 	return Nette.validators[op] ? Nette.validators[op](elem, arg, val) : null;
 };
 
