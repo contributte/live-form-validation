@@ -42,7 +42,7 @@ LiveForm.removeError = function(el) {
 		return;
 	}
 	if(err_el) {
-		err_el.parentNode.removeChild(el);
+		err_el.parentNode.removeChild(err_el);
 	}
 }
 
