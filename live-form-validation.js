@@ -20,6 +20,49 @@ var LiveForm = {
         forms: { }
 };
 
+/**
+ * Handlers for all the events that trigger validation
+ * YOU CAN CHANGE these handlers (ie. to use jQuery events instead)
+ */
+LiveForm.setUpHandlers = function(el) {
+        if (this.hasClass(el, this.options.noLiveValidation)) return;
+
+        var handler = function(event) {
+                event = event || window.event;
+                Nette.validateControl(event.target ? event.target : event.srcElement);
+        };
+
+        var self = this;
+
+        el.onchange = handler;
+        el.onblur = handler;
+        el.onkeydown = function (event) {
+                if (self.options.wait >= 200) {
+                        // Hide validation span tag.
+                        self.removeClass(this, self.options.controlErrorClass);
+                        self.removeClass(this, self.options.validMessageClass);
+                        
+                        var error = self.getMessageElement(this);
+                        error.innerHTML = '';
+                        error.className = '';
+                        
+                        // Cancel timeout to run validation handler
+                        if (self.timeout) {
+                                clearTimeout(self.timeout);
+                        }
+                }
+        };
+        el.onkeyup = function(event) {
+                event = event || window.event;
+                if (event.keyCode !== 9) {
+                        if (self.timeout) clearTimeout(self.timeout);
+                                self.timeout = setTimeout(function() {
+                                handler(event);
+                        }, self.options.wait);
+                }
+        };
+}
+
 LiveForm.addError = function(el, message) {
         this.forms[el.form.id].hasError = true;
         this.addClass(el, this.options.controlErrorClass);
@@ -65,46 +108,6 @@ LiveForm.showValid = function(el) {
         }
 
         return true;
-}
-
-// if needed CHANGE these handlers to use jQuery events instead
-LiveForm.setUpHandlers = function(el) {
-        if (this.hasClass(el, this.options.noLiveValidation)) return;
-
-        var handler = function(event) {
-                event = event || window.event;
-                Nette.validateControl(event.target ? event.target : event.srcElement);
-        };
-
-        var self = this;
-
-        el.onchange = handler;
-        el.onblur = handler;
-        el.onkeydown = function (event) {
-                if (self.options.wait >= 200) {
-                        // Hide validation span tag.
-                        self.removeClass(this, self.options.controlErrorClass);
-                        self.removeClass(this, self.options.validMessageClass);
-                        
-                        var error = self.getMessageElement(this);
-                        error.innerHTML = '';
-                        error.className = '';
-                        
-                        // Cancel timeout to run validation handler
-                        if (self.timeout) {
-                                clearTimeout(self.timeout);
-                        }
-                }
-        };
-        el.onkeyup = function(event) {
-                event = event || window.event;
-                if (event.keyCode !== 9) {
-                        if (self.timeout) clearTimeout(self.timeout);
-                                self.timeout = setTimeout(function() {
-                                handler(event);
-                        }, self.options.wait);
-                }
-        };
 }
 
 LiveForm.getMessageElement = function(el) {
