@@ -6,15 +6,15 @@
 
 var LiveForm = {
         options: {
-                controlErrorClass: 'form-control-error',
-                errorMessageClass: 'form-error-message',
-                validMessageClass: 'form-valid-message',
-                noLiveValidation: 'no-live-validation',
-                showValid: false,
-                dontShowWhenValidClass: 'dont-show-when-valid',
-                messageTag: 'span',
-                messageIdPostfix: '_message',
-                wait: 300
+                controlErrorClass: 'form-control-error',            // CSS class for an invalid control
+                errorMessageClass: 'form-error-message',            // CSS class for an error message
+                validMessageClass: 'form-valid-message',            // CSS class for a valid message
+                noLiveValidation: 'no-live-validation',             // CSS class for a valid message
+                showValid: false,                                   // show message when valid
+                dontShowWhenValidClass: 'dont-show-when-valid',     // control with this CSS class will not show valid message
+                messageTag: 'span',                                 // tag that will hold the error/valid message
+                messageIdPostfix: '_message',                       // message element id = control id + this postfix
+                wait: 300                                           // delay in ms before validating on keyup/keydown
         },
 
         forms: { }
