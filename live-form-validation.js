@@ -10,6 +10,8 @@ var LiveForm = {
                 errorMessageClass: 'form-error-message',            // CSS class for an error message
                 validMessageClass: 'form-valid-message',            // CSS class for a valid message
                 noLiveValidation: 'no-live-validation',             // CSS class for a valid message
+                showErrorApartClass: 'show-error-apart',			// control with this CSS class will display message in element with ID = errorApartDivPrefix+control's id
+                showErrorApartElementPrefix: 'error-container_',	// prefix for id of div where to display error message
                 showValid: false,                                   // show message when valid
                 dontShowWhenValidClass: 'dont-show-when-valid',     // control with this CSS class will not show valid message
                 messageTag: 'span',                                 // tag that will hold the error/valid message
@@ -117,7 +119,12 @@ LiveForm.getMessageElement = function(el) {
         if (!error) {
                 error = document.createElement(this.options.messageTag);
                 error.id = id;
-                el.parentNode.appendChild(error);
+                if(!this.hasClass(el, this.options.showErrorApartClass)) {
+                    el.parentNode.appendChild(error);
+                } else {
+                    var showApartElement = document.getElementById(this.options.showErrorApartElementPrefix+el.id);
+                    showApartElement.appendChild(error);
+                }
         }
 
         if (el.style.display == 'none') {
