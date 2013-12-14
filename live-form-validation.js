@@ -6,6 +6,7 @@
  * @changelog
  *   Robyer, 14.12.2013:
  *     - fix focus/blur circular repeating
+ *     - fix adding handlers (so toggle() will work)
  *   Robyer, 13.12.2013:
  *     - based on fork of pavelplzak (add showErrorApart functionality)
  *     - update with netteForms.js code from Nette 2.1
@@ -46,9 +47,9 @@ LiveForm.setUpHandlers = function(el) {
 
 	var self = this;
 
-	el.onchange = handler;
-	el.onblur = handler;
-	el.onkeydown = function (event) {
+	Nette.addEvent(el, "change", handler);
+	Nette.addEvent(el, "blur", handler);
+	Nette.addEvent(el, "keydown", function (event) {
 		if (self.options.wait === false || self.options.wait >= 200) {
 			// Hide validation span tag.
 			self.removeClass(this, self.options.controlErrorClass);
@@ -63,8 +64,8 @@ LiveForm.setUpHandlers = function(el) {
 				clearTimeout(self.timeout);
 			}
 		}
-	};
-	el.onkeyup = function(event) {
+	});
+	Nette.addEvent(el, "keyup", function(event) {
 		if (self.options.wait !== false) {
 			event = event || window.event;
 			if (event.keyCode !== 9) {
@@ -74,7 +75,7 @@ LiveForm.setUpHandlers = function(el) {
 				}, self.options.wait);
 			}
 		}
-	};
+	});
 };
 
 LiveForm.addError = function(el, message) {
