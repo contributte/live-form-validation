@@ -4,6 +4,8 @@
  * @author Radek Ježdík, MartyIX, David Grudl, pavelplzak, Robyer
  *
  * @changelog
+ *   Robyer, 14.12.2013:
+ *     - fix focus/blur circular repeating
  *   Robyer, 13.12.2013:
  *     - based on fork of pavelplzak (add showErrorApart functionality)
  *     - update with netteForms.js code from Nette 2.1
@@ -364,7 +366,11 @@ Nette.isDisabled = function(elem) {
  */
 Nette.addError = function(elem, message) {
 	if (elem.focus && !LiveForm.forms[elem.form.id].hasError) {
-		elem.focus();
+		if (!LiveForm.focusing) {
+			LiveForm.focusing = true;
+			elem.focus();
+			setTimeout(function() { LiveForm.focusing = false; }, 10);
+		}
 	}
 	if (LiveForm.hasClass(elem, LiveForm.options.noLiveValidation)) {
 		// notify errors for elements with disabled live validation
