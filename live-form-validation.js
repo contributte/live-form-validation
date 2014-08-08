@@ -34,10 +34,10 @@ var LiveForm = {
 		dontShowWhenValidClass: 'dont-show-when-valid',      // control with this CSS class will not show valid message
 		messageTag: 'span',                                  // tag that will hold the error/valid message
 		messageIdPostfix: '_message',                        // message element id = control id + this postfix
-		errorMessagePrefix: '<i class="fa fa-warning"></i> ' // show this html before error message itself 
-		showAllErrors: true                                  // show all errors when submitting form; or use "false" to show only first error
+		errorMessagePrefix: '<i class="fa fa-warning"></i> ',// show this html before error message itself 
+		showAllErrors: true,                                 // show all errors when submitting form; or use "false" to show only first error
 		showValid: false,                                    // show message when valid
-		wait: false,                                         // delay in ms before validating on keyup/keydown; or use "false" to disable it
+		wait: false                                          // delay in ms before validating on keyup/keydown; or use "false" to disable it
 	},
 
 	forms: { }
