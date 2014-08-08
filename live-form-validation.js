@@ -1,9 +1,16 @@
 /**
- * Live Form Validation for Nette 2.1
+ * Live Form Validation for Nette 2.2
  *
  * @author Radek Ježdík, MartyIX, David Grudl, pavelplzak, Robyer
  *
  * @changelog
+ *   Robyer, 8.8.2014:
+ *     - update with netteForms.js code from Nette 2.2
+ *     - add showAllErrors, showMessageClassOnParent, errorMessagePrefix options
+ *     - don't start validation when pressing one of special keys
+ *     - set defaults to use with Bootstrap 3 and AdminLTE template
+ *     - mark changes in netteForms.js code to simplify updating
+ *     - fix showValid() function
  *   Robyer, 14.12.2013:
  *     - fix focus/blur circular repeating
  *     - fix adding handlers (so toggle() will work)
@@ -17,21 +24,42 @@
 
 var LiveForm = {
 	options: {
-		controlErrorClass: 'form-control-error',            // CSS class for an invalid control
-		errorMessageClass: 'form-error-message',            // CSS class for an error message
-		validMessageClass: 'form-valid-message',            // CSS class for a valid message
-		noLiveValidation: 'no-live-validation',             // CSS class for a valid message
-		showErrorApartClass: 'show-error-apart',            // control with this CSS class will display message in element with ID = errorApartDivPrefix+control's id
-		showErrorApartElementPrefix: 'error-container_',    // prefix for id of div where to display error message
-		showValid: false,                                   // show message when valid
-		dontShowWhenValidClass: 'dont-show-when-valid',     // control with this CSS class will not show valid message
-		messageTag: 'span',                                 // tag that will hold the error/valid message
-		messageIdPostfix: '_message',                       // message element id = control id + this postfix
-		wait: false                                         // delay in ms before validating on keyup/keydown or use "false" to disable it
+		showMessageClassOnParent: 'form-group',              // CSS class of control's parent where error/valid class should be added; or "false" to use control directly
+		controlErrorClass: 'has-error',                      // CSS class for an invalid control
+		errorMessageClass: 'error-message',                  // CSS class for an error message
+		validMessageClass: 'has-success',                    // CSS class for a valid message
+		noLiveValidation:  'no-live-validation',             // CSS class for a valid message
+		showErrorApartClass: 'show-error-apart',             // control with this CSS class will display message in element with ID = errorApartDivPrefix+control's id
+		showErrorApartElementPrefix: 'error-container_',     // prefix for id of div where to display error message
+		dontShowWhenValidClass: 'dont-show-when-valid',      // control with this CSS class will not show valid message
+		messageTag: 'span',                                  // tag that will hold the error/valid message
+		messageIdPostfix: '_message',                        // message element id = control id + this postfix
+		errorMessagePrefix: '<i class="fa fa-warning"></i> ' // show this html before error message itself 
+		showAllErrors: true                                  // show all errors when submitting form; or use "false" to show only first error
+		showValid: false,                                    // show message when valid
+		wait: false,                                         // delay in ms before validating on keyup/keydown; or use "false" to disable it
 	},
 
 	forms: { }
 };
+
+LiveForm.isSpecialKey = function(k) {
+	// http://stackoverflow.com/questions/7770561/jquery-javascript-reject-control-keys-on-keydown-event
+	return (k == 20 /* Caps lock */
+		|| k == 16 /* Shift */
+		|| k == 9 /* Tab */
+		|| k == 27 /* Escape Key */
+		|| k == 17 /* Control Key */
+		|| k == 91 /* Windows Command Key */
+		|| k == 19 /* Pause Break */
+		|| k == 18 /* Alt Key */
+		|| k == 93 /* Right Click Point Key */
+		|| (k >= 35 && k <= 40) /* Home, End, Arrow Keys */
+		|| k == 45 /* Insert Key */
+		|| (k >= 33 && k <= 34) /*Page Down, Page Up */
+		|| (k >= 112 && k <= 123) /* F1 - F12 */
+		|| (k >= 144 && k <= 145)); /* Num Lock, Scroll Lock */
+}
 
 /**
  * Handlers for all the events that trigger validation
@@ -50,10 +78,10 @@ LiveForm.setUpHandlers = function(el) {
 	Nette.addEvent(el, "change", handler);
 	Nette.addEvent(el, "blur", handler);
 	Nette.addEvent(el, "keydown", function (event) {
-		if (self.options.wait === false || self.options.wait >= 200) {
+		if (!self.isSpecialKey(event.which) && (self.options.wait === false || self.options.wait >= 200)) {
 			// Hide validation span tag.
-			self.removeClass(this, self.options.controlErrorClass);
-			self.removeClass(this, self.options.validMessageClass);
+			self.removeClass(self.getGroupElement(this), self.options.controlErrorClass);
+			self.removeClass(self.getGroupElement(this), self.options.validMessageClass);
 			
 			var error = self.getMessageElement(this);
 			error.innerHTML = '';
@@ -80,10 +108,16 @@ LiveForm.setUpHandlers = function(el) {
 
 LiveForm.addError = function(el, message) {
 	this.forms[el.form.id].hasError = true;
-	this.addClass(el, this.options.controlErrorClass);
+	this.addClass(this.getGroupElement(el), this.options.controlErrorClass);
 
+	if (this.options.showValid && this.showValid(el)) {
+		this.removeClass(this.getGroupElement(el), this.options.validMessageClass);
+	}
+	
 	if (!message) {
 		message = '&nbsp;';
+	} else {
+		message = this.options.errorMessagePrefix + message;
 	}
 
 	var error = this.getMessageElement(el);
@@ -91,12 +125,14 @@ LiveForm.addError = function(el, message) {
 };
 
 LiveForm.removeError = function(el) {
-	this.removeClass(el, this.options.controlErrorClass);
+	var groupEl = this.getGroupElement(el);
+
+	this.removeClass(groupEl, this.options.controlErrorClass);
 	var err_el = document.getElementById(el.id + this.options.messageIdPostfix);
 
 	if (this.options.showValid && this.showValid(el)) {
 		err_el = this.getMessageElement(el);
-		err_el.className = this.options.validMessageClass;
+		this.addClass(groupEl, this.options.validMessageClass);
 		return;
 	}
 
@@ -113,8 +149,8 @@ LiveForm.showValid = function(el) {
 		}
 	}
 	
-	var rules = Nette.getRules(null, el);
-	if(rules.length == 0) {
+	var rules = Nette.parseJSON(el.getAttribute('data-nette-rules'));
+	if (rules.length == 0) {
 		return false;
 	}
 
@@ -122,9 +158,25 @@ LiveForm.showValid = function(el) {
 		return false;
 	}
 
-
 	return true;
 };
+
+LiveForm.getGroupElement = function(el) {
+	if (this.options.showMessageClassOnParent === false)
+		return el;
+	
+	var groupEl = el;
+	
+	while (!this.hasClass(groupEl, this.options.showMessageClassOnParent)) {
+		groupEl = groupEl.parentNode;
+		
+		if (groupEl === null) {
+			return el;
+		}
+	}
+
+	return groupEl;
+}
 
 LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
@@ -191,7 +243,6 @@ Nette.addEvent = function(element, on, callback) {
 };
 
 
-
 /**
  * Returns the value of form element.
  */
@@ -200,13 +251,23 @@ Nette.getValue = function(elem) {
 	if (!elem) {
 		return null;
 
-	} else if (!elem.nodeName) { // RadioNodeList
+	} else if (!elem.nodeName) { // RadioNodeList, HTMLCollection, array
+		var multi = elem[0] && !!elem[0].name.match(/\[\]$/),
+			res = [];
+
 		for (i = 0, len = elem.length; i < len; i++) {
-			if (elem[i].checked) {
+			if (elem[i].type in {checkbox: 1, radio: 1} && !elem[i].checked) {
+				continue;
+			} else if (multi) {
+				res.push(elem[i].value);
+			} else {
 				return elem[i].value;
 			}
 		}
-		return null;
+		return multi ? res : null;
+
+	} else if (!elem.form.elements[elem.name].nodeName) { // multi element
+		return Nette.getValue(elem.form.elements[elem.name]);
 
 	} else if (elem.nodeName.toLowerCase() === 'select') {
 		var index = elem.selectedIndex, options = elem.options, values = [];
@@ -222,12 +283,8 @@ Nette.getValue = function(elem) {
 		}
 		return values;
 
-	} else if (elem.type === 'checkbox') {
+		} else if (elem.type in {checkbox: 1, radio: 1}) {
 		return elem.checked;
-
-
-	} else if (elem.type === 'radio') {
-		return Nette.getValue(elem.form.elements[elem.name].nodeName ? [elem] : elem.form.elements[elem.name]);
 
 	} else if (elem.type === 'file') {
 		return elem.files || elem.value;
@@ -236,8 +293,6 @@ Nette.getValue = function(elem) {
 		return elem.value.replace("\r", '').replace(/^\s+|\s+$/g, '');
 	}
 };
-
-
 
 
 /**
@@ -252,6 +307,7 @@ Nette.getEffectiveValue = function(elem) {
 	}
 	return val;
 };
+
 
 /**
  * Validates form element against given rules.
@@ -298,9 +354,12 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 			return false;
 		}
 	}
+
+	// LiveForm: addition
 	if (!onlyCheck) {
 		LiveForm.removeError(elem);
 	}
+
 	return true;
 };
 
@@ -310,7 +369,10 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
  */
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender, scope = false;
+	
+	// LiveForm: addition
 	LiveForm.forms[form.id].hasError = false;
+
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
 		if (scopeArr.length) {
@@ -319,6 +381,9 @@ Nette.validateForm = function(sender) {
 			return true;
 		}
 	}
+
+	// LiveForm: addition
+	var success = true;
 
 	var radios = {}, i, elem;
 
@@ -337,10 +402,17 @@ Nette.validateForm = function(sender) {
 		}
 
 		if (!Nette.validateControl(elem)) {
-			return false;
+			// LiveForm: change
+			success = false;
+			
+			// LiveForm: addition
+			if (!LiveForm.options.showAllErrors)
+				break;
 		}
 	}
-	return true;
+
+	// LiveForm: change
+	return success;
 };
 
 
@@ -361,11 +433,11 @@ Nette.isDisabled = function(elem) {
 };
 
 
-
 /**
  * Display error message.
  */
 Nette.addError = function(elem, message) {
+	// LiveForm: addition
 	if (elem.focus && !LiveForm.forms[elem.form.id].hasError) {
 		if (!LiveForm.focusing) {
 			LiveForm.focusing = true;
@@ -381,6 +453,16 @@ Nette.addError = function(elem, message) {
 	} else {
 		LiveForm.addError(elem, message);
 	}
+	
+	// LiveForm: original netteForms.js code
+	/*
+	if (elem.focus) {
+		elem.focus();
+	}
+	if (message) {
+		alert(message);
+	}
+	*/
 };
 
 
@@ -417,7 +499,9 @@ Nette.validateRule = function(elem, op, arg) {
 
 Nette.validators = {
 	filled: function(elem, arg, val) {
-		return val !== '' && val !== false && val !== null;
+		return val !== '' && val !== false && val !== null
+			&& (!Nette.isArray(val) || val.length)
+			&& (!window.FileList || !(val instanceof FileList) || val.length);
 	},
 
 	blank: function(elem, arg, val) {
@@ -492,6 +576,14 @@ Nette.validators = {
 		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
 	},
 
+	min: function(elem, arg, val) {
+		return Nette.validators.range(elem, [arg, null], val);
+	},
+
+	max: function(elem, arg, val) {
+		return Nette.validators.range(elem, [null, arg], val);
+	},
+
 	range: function(elem, arg, val) {
 		return Nette.isArray(arg) ?
 			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
@@ -510,25 +602,35 @@ Nette.validators = {
 			}
 		}
 		return true;
+	},
+	image: function (elem, arg, val) {
+		if (window.FileList && val instanceof FileList) {
+			for (var i = 0; i < val.length; i++) {
+				var type = val[i].type;
+				if (type && type !== 'image/gif' && type !== 'image/png' && type !== 'image/jpeg') {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 };
-
 
 
 /**
  * Process all toggles in form.
  */
-Nette.toggleForm = function(form, firsttime) {
+Nette.toggleForm = function(form, elem) {
 	var i;
 	Nette.toggles = {};
 	for (i = 0; i < form.elements.length; i++) {
 		if (form.elements[i].nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1}) {
-			Nette.toggleControl(form.elements[i], null, null, firsttime);
+			Nette.toggleControl(form.elements[i], null, null, !elem);
 		}
 	}
 
 	for (i in Nette.toggles) {
-		Nette.toggle(i, Nette.toggles[i]);
+		Nette.toggle(i, Nette.toggles[i], elem);
 	}
 };
 
@@ -539,8 +641,8 @@ Nette.toggleForm = function(form, firsttime) {
 Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
 	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() {
-		Nette.toggleForm(elem.form);
-	};
+		Nette.toggleForm(elem.form, elem);
+	}, handled = [];
 
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
@@ -570,12 +672,15 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 					els = el.nodeName ? [el] : el; // is radiolist?
 
 				for (var i = 0; i < els.length; i++) {
-					Nette.addEvent(els[i], oldIE && el.type in {checkbox: 1, radio: 1} ? 'click' : 'change', handler);
+					if (!Nette.inArray(handled, els[i])) {
+						Nette.addEvent(els[i], oldIE && el.type in {checkbox: 1, radio: 1} ? 'click' : 'change', handler);
+						handled.push(els[i]);
+					}
 				}
 			}
 			for (var id2 in rule.toggle || []) {
 				if (__hasProp.call(rule.toggle, id2)) {
-					Nette.toggles[id2] = Nette.toggles[id2] || (success && rule.toggle[id2]);
+					Nette.toggles[id2] = Nette.toggles[id2] || (success ^ !rule.toggle[id2]);
 				}
 			}
 		}
@@ -596,7 +701,7 @@ Nette.parseJSON = function(s) {
 /**
  * Displays or hides HTML element.
  */
-Nette.toggle = function(id, visible) {
+Nette.toggle = function(id, visible, srcElement) {
 	var elem = document.getElementById(id);
 	if (elem) {
 		elem.style.display = visible ? '' : 'none';
@@ -610,9 +715,11 @@ Nette.toggle = function(id, visible) {
 Nette.initForm = function(form) {
 	form.noValidate = 'novalidate';
 
+	// LiveForm: addition
 	LiveForm.forms[form.id] = {
 		hasError: false
 	};
+
 	Nette.addEvent(form, 'submit', function(e) {
 		if (!Nette.validateForm(form)) {
 			if (e && e.stopPropagation) {
@@ -630,8 +737,9 @@ Nette.initForm = function(form) {
 		form['nette-submittedBy'] = (target.type in {submit: 1, image: 1}) ? target : null;
 	});
 
-	Nette.toggleForm(form, true);
+	Nette.toggleForm(form);
 
+	// LiveForm: addition
 	for (var i = 0; i < form.elements.length; i++) {
 		LiveForm.setUpHandlers(form.elements[i]);
 	}
@@ -645,6 +753,22 @@ Nette.isArray = function(arg) {
 	return Object.prototype.toString.call(arg) === '[object Array]';
 };
 
+
+/**
+ * Search for a specified value within an array.
+ */
+Nette.inArray = function(arr, val) {
+	if (Array.prototype.indexOf) {
+		return arr.indexOf(val) > -1;
+	} else {
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i] === val) {
+				return true;
+			}
+		}
+		return false;
+	}
+};
 
 
 Nette.addEvent(window, 'load', function() {
