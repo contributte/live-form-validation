@@ -155,20 +155,20 @@ LiveForm.addError = function(el, message) {
 
 	var error = this.getMessageElement(el);
 	error.innerHTML = message;
+	error.className = this.options.errorMessageClass;
 };
 
 LiveForm.removeError = function(el) {
 	var groupEl = this.getGroupElement(el);
 
 	this.removeClass(groupEl, this.options.controlErrorClass);
-	var err_el = document.getElementById(el.id + this.options.messageIdPostfix);
 
 	if (this.options.showValid && this.showValid(el)) {
-		err_el = this.getMessageElement(el);
 		this.addClass(groupEl, this.options.validMessageClass);
 		return;
 	}
 
+	var err_el = this.getMessageElement(el);
 	if (err_el) {
 		err_el.parentNode.removeChild(err_el);
 	}
@@ -215,23 +215,25 @@ LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
 	var error = document.getElementById(id);
 
+	var errorParent = (!this.hasClass(el, this.options.showErrorApartClass))
+			? el.parentNode
+			: document.getElementById(this.options.showErrorApartElementPrefix + el.id);
+
 	if (!error) {
+		// Try to find existing error message if it has no id (e.g. from server-validation)
+		error = errorParent.getElementsByClassName(this.options.errorMessageClass)[0];
+	}
+	
+	if (!error) {
+		// Error element doesn't exists, lets create a new one
 		error = document.createElement(this.options.messageTag);
 		error.id = id;
-		if(!this.hasClass(el, this.options.showErrorApartClass)) {
-			el.parentNode.appendChild(error);
-		} else {
-			var showApartElement = document.getElementById(this.options.showErrorApartElementPrefix+el.id);
-			showApartElement.appendChild(error);
-		}
+		errorParent.appendChild(error);
 	}
 
 	if (el.style.display == 'none') {
 		error.style.display = 'none';
 	}
-
-	error.className = this.options.errorMessageClass;
-	error.innerHTML = '';
 	
 	return error;
 };
