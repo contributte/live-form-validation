@@ -16,7 +16,7 @@ Options
 - **controlErrorClass** - CSS class for an invalid control
 - **errorMessageClass** - CSS class for an error message
 - **validMessageClass** - CSS class for a valid message
-- **noLiveValidation** - CSS class for a valid message
+- **noLiveValidation** - control with this CSS class will have disabled live validation
 - **showErrorApartClass** - control with this CSS class will display message in element with ID = errorApartDivPrefix+control's id
 - **showErrorApartElementPrefix** - prefix for id of div where to display error message
 - **dontShowWhenValidClass** - control with this CSS class will not show valid message

@@ -2,30 +2,8 @@
  * Live Form Validation for Nette Forms 2.3
  *
  * @author Radek Ježdík, MartyIX, David Grudl, pavelplzak, Robyer
- *
- * @changelog
- *   Robyer, 15.7.2015:
- *     - update with netteForms.js code from Nette Forms 2.3
- *     - use better default values for Bootstrap 3
- *       - add "text-danger" to errorMessageClass
- *       - set glyphicon icon for errorMessagePrefix
- *     - reformat options' comments to new lines
- *   Robyer, 8.8.2014:
- *     - update with netteForms.js code from Nette 2.2
- *     - add showAllErrors, showMessageClassOnParent, errorMessagePrefix options
- *     - don't start validation when pressing one of special keys
- *     - set defaults to use with Bootstrap 3 and AdminLTE template
- *     - mark changes in netteForms.js code to simplify updating
- *     - fix showValid() function
- *   Robyer, 14.12.2013:
- *     - fix focus/blur circular repeating
- *     - fix adding handlers (so toggle() will work)
- *   Robyer, 13.12.2013:
- *     - based on fork of pavelplzak (add showErrorApart functionality)
- *     - update with netteForms.js code from Nette 2.1
- *     - add alert() to notify errors for elements with disabled live validation
- *     - add ability to disable on keyup/keydown validation
- *     - add missing ";", use tabs for indentation
+ * @version 1.4.1
+ * @url https://github.com/Robyer/nette-live-form-validation/
  */
 
 var LiveForm = {
@@ -42,7 +20,7 @@ var LiveForm = {
 		// CSS class for a valid message
 		validMessageClass: 'has-success',
 		
-		// CSS class for a valid message
+		// control with this CSS class will have disabled live validation
 		noLiveValidation:  'no-live-validation',
 		
 		// control with this CSS class will display message in element with ID = errorApartDivPrefix+control's id
@@ -116,9 +94,9 @@ LiveForm.setUpHandlers = function(el) {
 			self.removeClass(self.getGroupElement(this), self.options.controlErrorClass);
 			self.removeClass(self.getGroupElement(this), self.options.validMessageClass);
 			
-			var error = self.getMessageElement(this);
-			error.innerHTML = '';
-			error.className = '';
+			var messageEl = self.getMessageElement(this);
+			messageEl.innerHTML = '';
+			messageEl.className = '';
 			
 			// Cancel timeout to run validation handler
 			if (self.timeout) {
@@ -153,9 +131,9 @@ LiveForm.addError = function(el, message) {
 		message = this.options.errorMessagePrefix + message;
 	}
 
-	var error = this.getMessageElement(el);
-	error.innerHTML = message;
-	error.className = this.options.errorMessageClass;
+	var messageEl = this.getMessageElement(el);
+	messageEl.innerHTML = message;
+	messageEl.className = this.options.errorMessageClass;
 };
 
 LiveForm.removeError = function(el) {
@@ -168,9 +146,9 @@ LiveForm.removeError = function(el) {
 		return;
 	}
 
-	var err_el = this.getMessageElement(el);
-	if (err_el) {
-		err_el.parentNode.removeChild(err_el);
+	var messageEl = this.getMessageElement(el);
+	if (messageEl) {
+		messageEl.parentNode.removeChild(messageEl);
 	}
 };
 
@@ -213,29 +191,29 @@ LiveForm.getGroupElement = function(el) {
 
 LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
-	var error = document.getElementById(id);
+	var messageEl = document.getElementById(id);
 
-	var errorParent = (!this.hasClass(el, this.options.showErrorApartClass))
+	var messageParent = (!this.hasClass(el, this.options.showErrorApartClass))
 			? el.parentNode
 			: document.getElementById(this.options.showErrorApartElementPrefix + el.id);
 
-	if (!error) {
-		// Try to find existing error message if it has no id (e.g. from server-validation)
-		error = errorParent.getElementsByClassName(this.options.errorMessageClass)[0];
+	if (!messageEl) {
+		// Try to find existing message element if it has no id (e.g. from server-validation)
+		messageEl = messageParent.getElementsByClassName(this.options.errorMessageClass)[0];
 	}
 	
-	if (!error) {
-		// Error element doesn't exists, lets create a new one
-		error = document.createElement(this.options.messageTag);
-		error.id = id;
-		errorParent.appendChild(error);
+	if (!messageEl) {
+		// Message element doesn't exist, lets create a new one
+		messageEl = document.createElement(this.options.messageTag);
+		messageEl.id = id;
+		messageParent.appendChild(messageEl);
 	}
 
 	if (el.style.display == 'none') {
-		error.style.display = 'none';
+		messageEl.style.display = 'none';
 	}
 	
-	return error;
+	return messageEl;
 };
 
 LiveForm.addClass = function(el, className) {
