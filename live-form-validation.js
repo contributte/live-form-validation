@@ -1,8 +1,8 @@
 /**
  * Live Form Validation for Nette Forms 2.3
  *
- * @author Radek Ježdík, MartyIX, David Grudl, pavelplzak, Robyer
- * @version 1.4.1
+ * @author Robert Pösel, Radek Ježdík, MartyIX, David Grudl
+ * @version 1.4.2
  * @url https://github.com/Robyer/nette-live-form-validation/
  */
 
@@ -22,12 +22,6 @@ var LiveForm = {
 		
 		// control with this CSS class will have disabled live validation
 		noLiveValidation:  'no-live-validation',
-		
-		// control with this CSS class will display message in element with ID = errorApartDivPrefix+control's id
-		showErrorApartClass: 'show-error-apart',
-		
-		// prefix for id of div where to display error message
-		showErrorApartElementPrefix: 'error-container_',
 		
 		// control with this CSS class will not show valid message
 		dontShowWhenValidClass: 'dont-show-when-valid',
@@ -193,20 +187,16 @@ LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
 	var messageEl = document.getElementById(id);
 
-	var messageParent = (!this.hasClass(el, this.options.showErrorApartClass))
-			? el.parentNode
-			: document.getElementById(this.options.showErrorApartElementPrefix + el.id);
-
 	if (!messageEl) {
 		// Try to find existing message element if it has no id (e.g. from server-validation)
-		messageEl = messageParent.getElementsByClassName(this.options.errorMessageClass)[0];
+		messageEl = el.parentNode.getElementsByClassName(this.options.errorMessageClass)[0];
 	}
 	
 	if (!messageEl) {
 		// Message element doesn't exist, lets create a new one
 		messageEl = document.createElement(this.options.messageTag);
 		messageEl.id = id;
-		messageParent.appendChild(messageEl);
+		el.parentNode.appendChild(messageEl);
 	}
 
 	if (el.style.display == 'none') {

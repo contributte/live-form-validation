@@ -17,8 +17,6 @@ Options
 - **errorMessageClass** - CSS class for an error message
 - **validMessageClass** - CSS class for a valid message
 - **noLiveValidation** - control with this CSS class will have disabled live validation
-- **showErrorApartClass** - control with this CSS class will display message in element with ID = errorApartDivPrefix+control's id
-- **showErrorApartElementPrefix** - prefix for id of div where to display error message
 - **dontShowWhenValidClass** - control with this CSS class will not show valid message
 - **messageTag** - tag that will hold the error/valid message
 - **messageIdPostfix** - message element id = control id + this postfix
@@ -31,6 +29,6 @@ Furthermore, you can edit methods addError (shows error msg.), removeError (hide
 
 Thanks to
 ---------
-This script is based on previous work of **Radek Ježdík**, **MartyIX**, **David Grudl**, **pavelplzak**.
+This script is based on work of **Robert Pösel**, **Radek Ježdík**, **MartyIX** and **David Grudl**.
 
 **Thank you all!**
