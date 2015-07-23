@@ -14,17 +14,17 @@ var LiveForm = {
 		// CSS class for an invalid control
 		controlErrorClass: 'has-error',
 		
-		// CSS class for an error message
-		errorMessageClass: 'help-block text-danger',
+		// CSS class for a valid control
+		controlValidClass: 'has-success',
 		
-		// CSS class for a valid message
-		validMessageClass: 'has-success',
+		// CSS class for an error message
+		messageErrorClass: 'help-block text-danger',
 		
 		// control with this CSS class will have disabled live validation
-		noLiveValidation:  'no-live-validation',
+		disableLiveValidationClass: 'no-live-validation',
 		
 		// control with this CSS class will not show valid message
-		dontShowWhenValidClass: 'dont-show-when-valid',
+		disableShowValidClass: 'no-show-valid',
 		
 		// tag that will hold the error/valid message
 		messageTag: 'span',
@@ -33,7 +33,7 @@ var LiveForm = {
 		messageIdPostfix: '_message',
 		
 		// show this html before error message itself 
-		errorMessagePrefix: '&nbsp;<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i>&nbsp;',
+		messageErrorPrefix: '&nbsp;<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i>&nbsp;',
 		
 		// show all errors when submitting form; or use "false" to show only first error
 		showAllErrors: true,
@@ -71,7 +71,7 @@ LiveForm.isSpecialKey = function(k) {
  * YOU CAN CHANGE these handlers (ie. to use jQuery events instead)
  */
 LiveForm.setUpHandlers = function(el) {
-	if (this.hasClass(el, this.options.noLiveValidation)) return;
+	if (this.hasClass(el, this.options.disableLiveValidationClass)) return;
 
 	var handler = function(event) {
 		event = event || window.event;
@@ -86,7 +86,7 @@ LiveForm.setUpHandlers = function(el) {
 		if (!self.isSpecialKey(event.which) && (self.options.wait === false || self.options.wait >= 200)) {
 			// Hide validation span tag.
 			self.removeClass(self.getGroupElement(this), self.options.controlErrorClass);
-			self.removeClass(self.getGroupElement(this), self.options.validMessageClass);
+			self.removeClass(self.getGroupElement(this), self.options.controlValidClass);
 			
 			var messageEl = self.getMessageElement(this);
 			messageEl.innerHTML = '';
@@ -116,18 +116,18 @@ LiveForm.addError = function(el, message) {
 	this.addClass(this.getGroupElement(el), this.options.controlErrorClass);
 
 	if (this.options.showValid && this.showValid(el)) {
-		this.removeClass(this.getGroupElement(el), this.options.validMessageClass);
+		this.removeClass(this.getGroupElement(el), this.options.controlValidClass);
 	}
 	
 	if (!message) {
 		message = '&nbsp;';
 	} else {
-		message = this.options.errorMessagePrefix + message;
+		message = this.options.messageErrorPrefix + message;
 	}
 
 	var messageEl = this.getMessageElement(el);
 	messageEl.innerHTML = message;
-	messageEl.className = this.options.errorMessageClass;
+	messageEl.className = this.options.messageErrorClass;
 };
 
 LiveForm.removeError = function(el) {
@@ -136,7 +136,7 @@ LiveForm.removeError = function(el) {
 	this.removeClass(groupEl, this.options.controlErrorClass);
 
 	if (this.options.showValid && this.showValid(el)) {
-		this.addClass(groupEl, this.options.validMessageClass);
+		this.addClass(groupEl, this.options.controlValidClass);
 		return;
 	}
 
@@ -159,7 +159,7 @@ LiveForm.showValid = function(el) {
 		return false;
 	}
 
-	if (this.hasClass(el, this.options.dontShowWhenValidClass)) {
+	if (this.hasClass(el, this.options.disableShowValidClass)) {
 		return false;
 	}
 
@@ -189,7 +189,7 @@ LiveForm.getMessageElement = function(el) {
 
 	if (!messageEl) {
 		// Try to find existing message element if it has no id (e.g. from server-validation)
-		messageEl = el.parentNode.getElementsByClassName(this.options.errorMessageClass)[0];
+		messageEl = el.parentNode.getElementsByClassName(this.options.messageErrorClass)[0];
 	}
 	
 	if (!messageEl) {
@@ -488,7 +488,7 @@ Nette.addError = function(elem, message) {
 			setTimeout(function() { LiveForm.focusing = false; }, 10);
 		}
 	}
-	if (LiveForm.hasClass(elem, LiveForm.options.noLiveValidation)) {
+	if (LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass)) {
 		// notify errors for elements with disabled live validation
 		if (message && !LiveForm.forms[elem.form.id].hasError) {
 			alert(message);

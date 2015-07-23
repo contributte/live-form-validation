@@ -14,13 +14,13 @@ Options
 -------
 - **showMessageClassOnParent** - CSS class of control's parent where error/valid class should be added; or "false" to use control directly
 - **controlErrorClass** - CSS class for an invalid control
-- **errorMessageClass** - CSS class for an error message
-- **validMessageClass** - CSS class for a valid message
-- **noLiveValidation** - control with this CSS class will have disabled live validation
-- **dontShowWhenValidClass** - control with this CSS class will not show valid message
+- **controlValidClass** - CSS class for a valid control
+- **messageErrorClass** - CSS class for an error message
+- **disableLiveValidationClass** - control with this CSS class will have disabled live validation
+- **disableShowValidClass** - control with this CSS class will not show valid message
 - **messageTag** - tag that will hold the error/valid message
 - **messageIdPostfix** - message element id = control id + this postfix
-- **errorMessagePrefix** - show this html before error message itself 
+- **messageErrorPrefix** - show this html before error message itself 
 - **showAllErrors** - show all errors when submitting form; or use "false" to show only first error
 - **showValid** - show message when valid
 - **wait** - delay in ms before validating on keyup/keydown; or use "false" to disable it
