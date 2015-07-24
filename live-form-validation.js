@@ -190,7 +190,7 @@ LiveForm.getMessageElement = function(el) {
 	if (!messageEl) {
 		// Find and remove existing error elements by class (e.g. from server-validation)
 		var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
-		while (errorEls.length > 0){
+		while (errorEls.length > 0) {
 			// Remove only direct children
 			var errorParent = errorEls[0].parentNode;
 			if (errorParent == parentEl) {
@@ -830,6 +830,10 @@ Nette.initOnLoad = function() {
 			for (var j = 0; j < form.elements.length; j++) {
 				if (form.elements[j].getAttribute('data-nette-rules')) {
 					Nette.initForm(form);
+
+          if(LiveForm.hasClass(form, 'form-validate'))
+            Nette.validateForm(form);
+					
 					break;
 				}
 			}
