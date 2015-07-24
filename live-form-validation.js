@@ -832,7 +832,7 @@ Nette.initOnLoad = function() {
 					Nette.initForm(form);
 
 					// LiveForm: addition
-					if (LiveForm.hasClass(form, 'form-validate'))
+					if (LiveForm.hasClass(form, 'validate-on-load'))
 						Nette.validateForm(form);
 					
 					break;

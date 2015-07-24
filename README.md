@@ -27,6 +27,10 @@ Options
 
 Furthermore, you can edit methods addError (shows error msg.), removeError (hides error msg.), showValid (show message if input is correctly filled), setupHandlers (sets handlers up for inputs, like focus, blur, onkeyup). These methods can be altered to support some JS framework, ie. jQuery.
 
+Form on load validation
+-----------------------
+Adding class **validate-on-load** to form element will execute its validation immediately after page is loaded.
+
 Thanks to
 ---------
 This script is based on work of **Robert Pösel**, **Radek Ježdík**, **MartyIX** and **David Grudl**.
