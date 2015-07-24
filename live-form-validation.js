@@ -135,21 +135,20 @@ LiveForm.removeError = function(el) {
 
 	this.removeClass(groupEl, this.options.controlErrorClass);
 
+	var messageEl = this.getMessageElement(el);
+	messageEl.innerHTML = '';
+	messageEl.className = '';
+	
 	if (this.options.showValid && this.showValid(el)) {
 		this.addClass(groupEl, this.options.controlValidClass);
 		return;
 	}
-
-	var messageEl = this.getMessageElement(el);
-	if (messageEl) {
-		messageEl.parentNode.removeChild(messageEl);
-	}
 };
 
 LiveForm.showValid = function(el) {
-	if(el.type) {
+	if (el.type) {
 		var type = el.type.toLowerCase();
-		if(type == 'checkbox' || type == 'radio') {
+		if (type == 'checkbox' || type == 'radio') {
 			return false;
 		}
 	}
@@ -186,21 +185,26 @@ LiveForm.getGroupElement = function(el) {
 LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
 	var messageEl = document.getElementById(id);
-
-	if (!messageEl) {
-		// Try to find existing message element if it has no id (e.g. from server-validation)
-		messageEl = el.parentNode.getElementsByClassName(this.options.messageErrorClass)[0];
-	}
+	var parentEl = el.parentNode;
 	
 	if (!messageEl) {
+		// Find and remove existing error elements by class (e.g. from server-validation)
+		var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
+		while (errorEls.length > 0){
+			// Remove only direct children
+			var errorParent = errorEls[0].parentNode;
+			if (errorParent == parentEl) {
+				errorParent.removeChild(errorEls[0]);
+			}
+		}
+		
 		// Message element doesn't exist, lets create a new one
 		messageEl = document.createElement(this.options.messageTag);
 		messageEl.id = id;
-		el.parentNode.appendChild(messageEl);
-	}
-
-	if (el.style.display == 'none') {
-		messageEl.style.display = 'none';
+		if (el.style.display == 'none') {
+			messageEl.style.display = 'none';
+		}
+		parentEl.appendChild(messageEl);
 	}
 	
 	return messageEl;
