@@ -19,9 +19,9 @@ var LiveForm = {
 		
 		// CSS class for an error message
 		messageErrorClass: 'help-block text-danger',
-	  
-    // hidden control with this CSS class will show error message
-    enableHiddenMessageClass: 'show-hidden-error',
+		
+		// hidden control with this CSS class will show error message
+		enableHiddenMessageClass: 'show-hidden-error',
 
 		// control with this CSS class will have disabled live validation
 		disableLiveValidationClass: 'no-live-validation',
@@ -135,7 +135,7 @@ LiveForm.addError = function(el, message) {
 
 LiveForm.removeError = function(el) {
 	//no one cares about element with disabled live validation
-	if(this.hasClass(el, this.options.disableLiveValidationClass))
+	if (this.hasClass(el, this.options.disableLiveValidationClass))
 		return
 
 	var groupEl = this.getGroupElement(el);
@@ -193,6 +193,11 @@ LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
 	var messageEl = document.getElementById(id);
 	var parentEl = el.parentNode;
+
+	//Don't append error message to radio input's label
+	if (el.type == 'radio' && parentEl.tagName == 'LABEL') {
+		parentEl = parentEl.parentNode;
+	}
 	
 	// Find existing error elements by class (e.g. from server-validation)
 	var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
@@ -217,7 +222,7 @@ LiveForm.getMessageElement = function(el) {
 		messageEl = document.createElement(this.options.messageTag);
 		messageEl.id = id;
 
-		if(!this.hasClass(el, this.options.enableHiddenMessageClass)) {
+		if (!this.hasClass(el, this.options.enableHiddenMessageClass)) {
 			if (el.style.display == 'none') {
 				messageEl.style.display = 'none';
 			}
