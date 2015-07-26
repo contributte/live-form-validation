@@ -13,37 +13,37 @@ var LiveForm = {
 
 		// CSS class for an invalid control
 		controlErrorClass: 'has-error',
-		
+
 		// CSS class for a valid control
 		controlValidClass: 'has-success',
-		
+
 		// CSS class for an error message
 		messageErrorClass: 'help-block text-danger',
-		
+
 		// hidden control with this CSS class will show error message
 		enableHiddenMessageClass: 'show-hidden-error',
 
 		// control with this CSS class will have disabled live validation
 		disableLiveValidationClass: 'no-live-validation',
-		
+
 		// control with this CSS class will not show valid message
 		disableShowValidClass: 'no-show-valid',
-		
+
 		// tag that will hold the error/valid message
 		messageTag: 'span',
-		
+
 		// message element id = control id + this postfix
 		messageIdPostfix: '_message',
-		
+
 		// show this html before error message itself 
 		messageErrorPrefix: '&nbsp;<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i>&nbsp;',
-		
+
 		// show all errors when submitting form; or use "false" to show only first error
 		showAllErrors: true,
-		
+
 		// show message when valid
 		showValid: false,
-		
+
 		// delay in ms before validating on keyup/keydown; or use "false" to disable it
 		wait: false
 	},
@@ -121,7 +121,7 @@ LiveForm.addError = function(el, message) {
 	if (this.options.showValid && this.showValid(el)) {
 		this.removeClass(this.getGroupElement(el), this.options.controlValidClass);
 	}
-	
+
 	if (!message) {
 		message = '&nbsp;';
 	} else {
@@ -145,7 +145,7 @@ LiveForm.removeError = function(el) {
 	var messageEl = this.getMessageElement(el);
 	messageEl.innerHTML = '';
 	messageEl.className = '';
-	
+
 	if (this.options.showValid && this.showValid(el)) {
 		this.addClass(groupEl, this.options.controlValidClass);
 		return;
@@ -159,7 +159,7 @@ LiveForm.showValid = function(el) {
 			return false;
 		}
 	}
-	
+
 	var rules = Nette.parseJSON(el.getAttribute('data-nette-rules'));
 	if (rules.length == 0) {
 		return false;
@@ -175,12 +175,12 @@ LiveForm.showValid = function(el) {
 LiveForm.getGroupElement = function(el) {
 	if (this.options.showMessageClassOnParent === false)
 		return el;
-	
+
 	var groupEl = el;
-	
+
 	while (!this.hasClass(groupEl, this.options.showMessageClassOnParent)) {
 		groupEl = groupEl.parentNode;
-		
+
 		if (groupEl === null) {
 			return el;
 		}
@@ -194,14 +194,15 @@ LiveForm.getMessageElement = function(el) {
 	var messageEl = document.getElementById(id);
 	var parentEl = el.parentNode;
 
-	//Don't append error message to radio input's label
-	if (el.type == 'radio' && parentEl.tagName == 'LABEL') {
+	//Don't append error message to radio/checkbox input's label, but along label
+	var type = el.type.toLowerCase();
+	if ((type == 'radio' || type == 'checkbox') && parentEl.tagName == 'LABEL') {
 		parentEl = parentEl.parentNode;
 	}
-	
+
 	// Find existing error elements by class (e.g. from server-validation)
 	var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
-	
+
 	//Keep one of existing error elements
 	if (!messageEl && errorEls.length) {
 		messageEl = errorEls[0];
@@ -216,7 +217,7 @@ LiveForm.getMessageElement = function(el) {
 			errorParent.removeChild(errorEls[i]);
 		}
 	}
-		
+
 	//If Message element doesn't exist, lets create a new one
 	if (!messageEl) {
 		messageEl = document.createElement(this.options.messageTag);
@@ -229,7 +230,7 @@ LiveForm.getMessageElement = function(el) {
 		}
 		parentEl.appendChild(messageEl);
 	}
-	
+
 	return messageEl;
 };
 
@@ -523,7 +524,7 @@ Nette.addError = function(elem, message) {
 	} else {
 		LiveForm.addError(elem, message);
 	}
-	
+
 	// LiveForm: original netteForms.js code
 	/*
 	if (message) {
