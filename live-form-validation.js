@@ -190,11 +190,11 @@ LiveForm.getMessageElement = function(el) {
 	if (!messageEl) {
 		// Find and remove existing error elements by class (e.g. from server-validation)
 		var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
-		while (errorEls.length > 0) {
+		for (var i = errorEls.length - 1; i > -1; i--) {
 			// Remove only direct children
-			var errorParent = errorEls[0].parentNode;
+			var errorParent = errorEls[i].parentNode;
 			if (errorParent == parentEl) {
-				errorParent.removeChild(errorEls[0]);
+				errorParent.removeChild(errorEls[i]);
 			}
 		}
 		
