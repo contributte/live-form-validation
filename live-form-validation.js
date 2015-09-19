@@ -203,8 +203,8 @@ LiveForm.getMessageElement = function(el) {
 		parentEl = parentEl.parentNode;
 	}
 
-  // Find and remove existing error elements by class (e.g. from server-validation)
-  var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
+	// Find and remove existing error elements by class (e.g. from server-validation)
+	var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
 
 	//Keep one of existing error elements
 	if (!messageEl && errorEls.length && this.hasClass(el, this.options.keepMessageErrorClass)) {
@@ -212,14 +212,14 @@ LiveForm.getMessageElement = function(el) {
 		messageEl.id = id;
 	}
 
-  for (var i = errorEls.length - 1; i > -1; i--) {
-    // Remove only direct children
-    var errorParent = errorEls[i].parentNode;
-    if (errorParent == parentEl) {
-      if (this.hasClass(el, this.options.keepMessageErrorClass) && messageEl != errorEls[i]) {
-      errorParent.removeChild(errorEls[i]);
-    }
-  }
+	for (var i = errorEls.length - 1; i > -1; i--) {
+		// Remove only direct children
+		var errorParent = errorEls[i].parentNode;
+		if (errorParent == parentEl) {
+			if (this.hasClass(el, this.options.keepMessageErrorClass) && messageEl != errorEls[i]) {
+			errorParent.removeChild(errorEls[i]);
+		}
+	}
 		
 	if (!messageEl) {
 		// Message element doesn't exist, lets create a new one
@@ -227,10 +227,10 @@ LiveForm.getMessageElement = function(el) {
 		messageEl.id = id;
 
 		if (!this.hasClass(el, this.options.enableHiddenMessageClass)) {
-      if (el.style.display == 'none') {
-        messageEl.style.display = 'none';
-      }
-    }
+			if (el.style.display == 'none') {
+				messageEl.style.display = 'none';
+			}
+		}
 		parentEl.appendChild(messageEl);
 	}
 	
