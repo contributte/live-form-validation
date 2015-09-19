@@ -216,8 +216,9 @@ LiveForm.getMessageElement = function(el) {
 		// Remove only direct children
 		var errorParent = errorEls[i].parentNode;
 		if (errorParent == parentEl) {
-			if (this.hasClass(el, this.options.keepMessageErrorClass) && messageEl != errorEls[i]) {
-			errorParent.removeChild(errorEls[i]);
+			if (!this.hasClass(el, this.options.keepMessageErrorClass) || messageEl != errorEls[i]) {
+				errorParent.removeChild(errorEls[i]);
+      }
 		}
 	}
 		
