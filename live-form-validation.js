@@ -20,6 +20,12 @@ var LiveForm = {
 		// CSS class for an error message
 		messageErrorClass: 'help-block text-danger',
 		
+		// CSS class for keeping an error message where it is
+		keepMessageErrorClass: 'keep-error',
+
+		// hidden control with this CSS class will show error message
+		enableHiddenMessageClass: 'show-hidden-error',
+	
 		// control with this CSS class will have disabled live validation
 		disableLiveValidationClass: 'no-live-validation',
 		
@@ -131,6 +137,10 @@ LiveForm.addError = function(el, message) {
 };
 
 LiveForm.removeError = function(el) {
+	//no one cares about element with disabled live validation
+	if (this.hasClass(el, this.options.disableLiveValidationClass))
+		return
+
 	var groupEl = this.getGroupElement(el);
 
 	this.removeClass(groupEl, this.options.controlErrorClass);
@@ -186,23 +196,41 @@ LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
 	var messageEl = document.getElementById(id);
 	var parentEl = el.parentNode;
-	
-	if (!messageEl) {
-		// Find and remove existing error elements by class (e.g. from server-validation)
-		var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
-		for (var i = errorEls.length - 1; i > -1; i--) {
-			// Remove only direct children
-			var errorParent = errorEls[i].parentNode;
-			if (errorParent == parentEl) {
+
+	//Don't append error message to radio/checkbox input's label, but along label
+	var type = el.type.toLowerCase();
+	if ((type == 'radio' || type == 'checkbox') && parentEl.tagName == 'LABEL') {
+		parentEl = parentEl.parentNode;
+	}
+
+	// Find and remove existing error elements by class (e.g. from server-validation)
+	var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
+
+	//Keep one of existing error elements
+	if (!messageEl && errorEls.length && this.hasClass(el, this.options.keepMessageErrorClass)) {
+		messageEl = errorEls[0];
+		messageEl.id = id;
+	}
+
+	for (var i = errorEls.length - 1; i > -1; i--) {
+		// Remove only direct children
+		var errorParent = errorEls[i].parentNode;
+		if (errorParent == parentEl) {
+			if (!this.hasClass(el, this.options.keepMessageErrorClass) || messageEl != errorEls[i]) {
 				errorParent.removeChild(errorEls[i]);
-			}
+      }
 		}
+	}
 		
+	if (!messageEl) {
 		// Message element doesn't exist, lets create a new one
 		messageEl = document.createElement(this.options.messageTag);
 		messageEl.id = id;
-		if (el.style.display == 'none') {
-			messageEl.style.display = 'none';
+
+		if (!this.hasClass(el, this.options.enableHiddenMessageClass)) {
+			if (el.style.display == 'none') {
+				messageEl.style.display = 'none';
+			}
 		}
 		parentEl.appendChild(messageEl);
 	}

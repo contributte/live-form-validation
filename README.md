@@ -16,6 +16,8 @@ Options
 - **controlErrorClass** - CSS class for an invalid control
 - **controlValidClass** - CSS class for a valid control
 - **messageErrorClass** - CSS class for an error message
+- **keepMessageErrorClass** - CSS class for keeping an error message where it is
+- **enableHiddenMessageClass** - hidden control with this CSS class will show error message
 - **disableLiveValidationClass** - control with this CSS class will have disabled live validation
 - **disableShowValidClass** - control with this CSS class will not show valid message
 - **messageTag** - tag that will hold the error/valid message
