@@ -111,6 +111,33 @@ LiveForm.setUpHandlers = function(el) {
 	});
 };
 
+LiveForm.processServerErrors = function(el) {
+	var messageEl = this.getMessageElement(el);
+	var parentEl = messageEl.parentNode; // This is parent element which contain the error elements
+	
+	var errors = [];
+	
+	// Find existing error elements by class (from server-validation)
+	var errorEls = parentEl.getElementsByClassName(this.options.messageErrorClass);
+	for (var i = errorEls.length - 1; i > -1; i--) {
+		// Don't touch our main message element
+		if (errorEls[i] == messageEl)
+			continue;
+		
+		// Remove only direct children
+		var errorParent = errorEls[i].parentNode;
+		if (errorParent == parentEl) {
+			errors.push(errorEls[i].outerHTML);
+			errorParent.removeChild(errorEls[i]);
+		}
+	}
+
+	// Wrap all server errors into one element
+	if (errors.length > 0) {
+		messageEl.innerHTML = errors.join("");
+	}
+};
+
 LiveForm.addError = function(el, message) {
 	this.forms[el.form.id].hasError = true;
 	this.addClass(this.getGroupElement(el), this.options.controlErrorClass);
@@ -131,6 +158,10 @@ LiveForm.addError = function(el, message) {
 };
 
 LiveForm.removeError = function(el) {
+	// We don't want to remove any errors during onLoadValidation
+	if (this.forms[el.form.id].onLoadValidation)
+		return;
+	
 	var groupEl = this.getGroupElement(el);
 
 	this.removeClass(groupEl, this.options.controlErrorClass);
@@ -185,25 +216,16 @@ LiveForm.getGroupElement = function(el) {
 LiveForm.getMessageElement = function(el) {
 	var id = el.id + this.options.messageIdPostfix;
 	var messageEl = document.getElementById(id);
-	var parentEl = el.parentNode;
-	
+
 	if (!messageEl) {
-		// Find and remove existing error elements by class (e.g. from server-validation)
-		var errorEls = el.parentNode.getElementsByClassName(this.options.messageErrorClass);
-		for (var i = errorEls.length - 1; i > -1; i--) {
-			// Remove only direct children
-			var errorParent = errorEls[i].parentNode;
-			if (errorParent == parentEl) {
-				errorParent.removeChild(errorEls[i]);
-			}
-		}
-		
 		// Message element doesn't exist, lets create a new one
 		messageEl = document.createElement(this.options.messageTag);
 		messageEl.id = id;
 		if (el.style.display == 'none') {
 			messageEl.style.display = 'none';
 		}
+		
+		var parentEl = messageEl.parentNode;
 		parentEl.appendChild(messageEl);
 	}
 	
@@ -493,8 +515,8 @@ Nette.addError = function(elem, message) {
 		}
 	}
 	if (LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass)) {
-		// notify errors for elements with disabled live validation
-		if (message && !LiveForm.forms[elem.form.id].hasError) {
+		// notify errors for elements with disabled live validation (but only errors and not during onLoadValidation)
+		if (message && !LiveForm.forms[elem.form.id].hasError && !LiveForm.forms[elem.form.id].onLoadValidation) {
 			alert(message);
 		}
 	} else {
@@ -791,7 +813,8 @@ Nette.initForm = function(form) {
 
 	// LiveForm: addition
 	LiveForm.forms[form.id] = {
-		hasError: false
+		hasError: false,
+		onLoadValidation: false
 	};
 
 	Nette.addEvent(form, 'submit', function(e) {
@@ -816,6 +839,7 @@ Nette.initForm = function(form) {
 	// LiveForm: addition
 	for (var i = 0; i < form.elements.length; i++) {
 		LiveForm.setUpHandlers(form.elements[i]);
+		LiveForm.processServerErrors(form.elements[i]);
 	}
 };
 
@@ -832,9 +856,13 @@ Nette.initOnLoad = function() {
 					Nette.initForm(form);
 
 					// LiveForm: addition
-					if (LiveForm.hasClass(form, 'validate-on-load'))
+					if (LiveForm.hasClass(form, 'validate-on-load')) {
+						// This is not so nice way, but I don't want to spoil validateForm, validateControl and other methods with another parameter
+						LiveForm.forms[form.id].onLoadValidation = true;
 						Nette.validateForm(form);
-					
+						LiveForm.forms[form.id].onLoadValidation = false;
+					}
+
 					break;
 				}
 			}
