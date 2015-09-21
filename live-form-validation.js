@@ -113,7 +113,7 @@ LiveForm.setUpHandlers = function(el) {
 
 LiveForm.processServerErrors = function(el) {
 	var messageEl = this.getMessageElement(el);
-	var parentEl = messageEl.parentNode; // This is parent element which contain the error elements
+	var parentEl = this.getMessageParent(el); // This is parent element which contain the error elements
 	
 	var errors = [];
 	
@@ -225,12 +225,26 @@ LiveForm.getMessageElement = function(el) {
 			messageEl.style.display = 'none';
 		}
 		
-		var parentEl = messageEl.parentNode;
+		var parentEl = this.getMessageParent(el);
 		parentEl.appendChild(messageEl);
 	}
 	
 	return messageEl;
 };
+
+LiveForm.getMessageParent = function(el) {
+	var parentEl = el.parentNode;
+	
+	// Don't append error message to radio/checkbox input's label, but along label 
+	if (el.type) {
+		var type = el.type.toLowerCase(); 
+		if ((type == 'checkbox' || type == 'radio') && parentEl.tagName == 'LABEL') { 
+			parentEl = parentEl.parentNode; 
+		}
+	}
+	
+	return parentEl;
+}
 
 LiveForm.addClass = function(el, className) {
 	if (!el.className) {
