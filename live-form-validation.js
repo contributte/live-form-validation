@@ -507,6 +507,13 @@ Nette.isDisabled = function(elem) {
  */
 Nette.addError = function(elem, message) {
 	// LiveForm: addition
+	var noLiveValidation = LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass);
+	if (noLiveValidation) {
+		// notify errors for elements with disabled live validation (but only errors and not during onLoadValidation)
+		if (message && !LiveForm.forms[elem.form.id].hasError && !LiveForm.forms[elem.form.id].onLoadValidation) {
+			alert(message);
+		}
+	}
 	if (elem.focus && !LiveForm.forms[elem.form.id].hasError) {
 		if (!LiveForm.focusing) {
 			LiveForm.focusing = true;
@@ -514,12 +521,7 @@ Nette.addError = function(elem, message) {
 			setTimeout(function() { LiveForm.focusing = false; }, 10);
 		}
 	}
-	if (LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass)) {
-		// notify errors for elements with disabled live validation (but only errors and not during onLoadValidation)
-		if (message && !LiveForm.forms[elem.form.id].hasError && !LiveForm.forms[elem.form.id].onLoadValidation) {
-			alert(message);
-		}
-	} else {
+	if (!noLiveValidation) {
 		LiveForm.addError(elem, message);
 	}
 	
