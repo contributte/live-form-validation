@@ -34,6 +34,6 @@ Adding class **validate-on-load** to form element will execute its validation im
 
 Thanks to
 ---------
-This script is based on work of **Robert Pösel**, **Radek Ježdík**, **MartyIX** and **David Grudl**.
+This script is based on work of **Robert Pösel**, **zakrava**, **Radek Ježdík**, **MartyIX** and **David Grudl**.
 
 **Thank you all!**
