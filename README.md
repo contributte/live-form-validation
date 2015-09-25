@@ -21,7 +21,7 @@ Options
 - **disableShowValidClass** - control with this CSS class will not show valid message
 - **messageTag** - tag that will hold the error/valid message
 - **messageIdPostfix** - message element id = control id + this postfix
-- **messageErrorPrefix** - show this html before error message itself 
+- **messageErrorPrefix** - show this html before error message itself
 - **showAllErrors** - show all errors when submitting form; or use "false" to show only first error
 - **showValid** - show message when valid
 - **wait** - delay in ms before validating on keyup/keydown; or use "false" to disable it
