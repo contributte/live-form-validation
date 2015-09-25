@@ -146,7 +146,7 @@ LiveForm.addError = function(el, message) {
 	if (this.hasClass(el, this.options.disableLiveValidationClass))
 		return;
 
-	this.forms[el.form.id].hasError = true;
+	this.setFormProperty(el.form.id, "hasError", true);
 	this.addClass(this.getGroupElement(el), this.options.controlErrorClass);
 
 	if (this.options.showValid && this.showValid(el)) {
@@ -166,7 +166,7 @@ LiveForm.addError = function(el, message) {
 
 LiveForm.removeError = function(el) {
 	// We don't want to remove any errors during onLoadValidation
-	if (this.forms[el.form.id].onLoadValidation)
+	if (this.getFormProperty(el.form.id, "onLoadValidation"))
 		return;
 
 	var groupEl = this.getGroupElement(el);
@@ -273,6 +273,20 @@ LiveForm.removeClass = function(el, className) {
 		var m = el.className.match(reg);
 		el.className = el.className.replace(reg, (m[1] == ' ' && m[2] == ' ') ? ' ' : '');
 	}
+};
+
+LiveForm.hasFormProperty = function(formId, propertyName) {
+	if (!this.forms[formId])
+		return false;
+
+	return this.forms[formId][propertyName];
+};
+
+LiveForm.setFormProperty = function(formId, propertyName, value) {
+	if (!this.forms[formId])
+		return;
+
+	this.forms[formId][propertyName] = value;
 };
 
 ////////////////////////////   modified netteForms.js   ///////////////////////////////////
@@ -459,7 +473,7 @@ Nette.validateForm = function(sender) {
 		scope = false;
 
 	// LiveForm: addition
-	LiveForm.forms[form.id].hasError = false;
+	LiveForm.setFormProperty(form.id, "hasError", false);
 
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
@@ -531,11 +545,11 @@ Nette.addError = function(elem, message) {
 	var noLiveValidation = LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass);
 	if (noLiveValidation) {
 		// notify errors for elements with disabled live validation (but only errors and not during onLoadValidation)
-		if (message && !LiveForm.forms[elem.form.id].hasError && !LiveForm.forms[elem.form.id].onLoadValidation) {
+		if (message && !LiveForm.hasFormProperty(elem.form.id, "hasError") && !LiveForm.hasFormProperty(elem.form.id, "onLoadValidation")) {
 			alert(message);
 		}
 	}
-	if (elem.focus && !LiveForm.forms[elem.form.id].hasError) {
+	if (elem.focus && !LiveForm.hasFormProperty(elem.form.id, "hasError")) {
 		if (!LiveForm.focusing) {
 			LiveForm.focusing = true;
 			elem.focus();
@@ -881,9 +895,9 @@ Nette.initOnLoad = function() {
 					// LiveForm: addition
 					if (LiveForm.hasClass(form, 'validate-on-load')) {
 						// This is not so nice way, but I don't want to spoil validateForm, validateControl and other methods with another parameter
-						LiveForm.forms[form.id].onLoadValidation = true;
+						LiveForm.setFormProperty(form.id, "onLoadValidation", true);
 						Nette.validateForm(form);
-						LiveForm.forms[form.id].onLoadValidation = false;
+						LiveForm.setFormProperty(form.id, "onLoadValidation", false);
 					}
 
 					break;
