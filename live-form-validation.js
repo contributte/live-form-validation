@@ -20,6 +20,9 @@ var LiveForm = {
 		// CSS class for an error message
 		messageErrorClass: 'help-block text-danger',
 		
+		// control with this CSS class will show error/valid message even when control itself is hidden (useful for controls which are hidden and wrapped into special component)
+		enableHiddenMessageClass: 'show-hidden-error',
+		
 		// control with this CSS class will have disabled live validation
 		disableLiveValidationClass: 'no-live-validation',
 		
@@ -139,6 +142,10 @@ LiveForm.processServerErrors = function(el) {
 };
 
 LiveForm.addError = function(el, message) {
+	// Ignore elements with disabled live validation
+	if (this.hasClass(el, this.options.disableLiveValidationClass))
+		return;
+	
 	this.forms[el.form.id].hasError = true;
 	this.addClass(this.getGroupElement(el), this.options.controlErrorClass);
 
@@ -221,7 +228,7 @@ LiveForm.getMessageElement = function(el) {
 		// Message element doesn't exist, lets create a new one
 		messageEl = document.createElement(this.options.messageTag);
 		messageEl.id = id;
-		if (el.style.display == 'none') {
+		if (el.style.display == 'none' && !this.hasClass(el, this.options.enableHiddenMessageClass)) {
 			messageEl.style.display = 'none';
 		}
 		
