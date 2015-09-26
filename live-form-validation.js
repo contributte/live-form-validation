@@ -74,7 +74,15 @@ LiveForm.isSpecialKey = function(k) {
  * YOU CAN CHANGE these handlers (ie. to use jQuery events instead)
  */
 LiveForm.setupHandlers = function(el) {
-	if (this.hasClass(el, this.options.disableLiveValidationClass)) return;
+	if (this.hasClass(el, this.options.disableLiveValidationClass))
+		return;
+
+	// Check if element was already initialized
+	if (el.getAttribute("data-lfv-initialized"))
+		return;
+
+	// Remember we initialized this element so we won't do it again
+	el.setAttribute('data-lfv-initialized', 'true');
 
 	var handler = function(event) {
 		event = event || window.event;
