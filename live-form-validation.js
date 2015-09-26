@@ -221,9 +221,22 @@ LiveForm.getGroupElement = function(el) {
 }
 
 LiveForm.getMessageElement = function(el) {
-	var id = el.id + this.options.messageIdPostfix;
-	var messageEl = document.getElementById(id);
+	var id = el.getAttribute('data-lfv-message-id');
+	if (!id) {
+		// Id is not specified yet, let's create a new one
+		id = el.id + this.options.messageIdPostfix;
 
+		var i = 0;
+		while (document.getElementById(id)) {
+			// We want unique ID which doesn't exist yet
+			id = el.id + this.options.messageIdPostfix + '_' + ++i;
+		}
+
+		// Remember this id for next use
+		el.setAttribute('data-lfv-message-id', id);
+	}
+
+	var messageEl = document.getElementById(id);
 	if (!messageEl) {
 		// Message element doesn't exist, lets create a new one
 		messageEl = document.createElement(this.options.messageTag);
