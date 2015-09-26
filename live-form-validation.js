@@ -275,7 +275,7 @@ LiveForm.removeClass = function(el, className) {
 	}
 };
 
-LiveForm.hasFormProperty = function(formId, propertyName) {
+LiveForm.getFormProperty = function(formId, propertyName) {
 	if (!this.forms[formId])
 		return false;
 
@@ -546,11 +546,11 @@ Nette.addError = function(elem, message) {
 	// User explicitly disabled live-validation or form wasn't initialized at all, so we want to show simple alerts
 	if (noLiveValidation) {
 		// notify errors for elements with disabled live validation (but only errors and not during onLoadValidation)
-		if (message && !LiveForm.hasFormProperty(elem.form.id, "hasError") && !LiveForm.hasFormProperty(elem.form.id, "onLoadValidation")) {
+		if (message && !LiveForm.getFormProperty(elem.form.id, "hasError") && !LiveForm.getFormProperty(elem.form.id, "onLoadValidation")) {
 			alert(message);
 		}
 	}
-	if (elem.focus && !LiveForm.hasFormProperty(elem.form.id, "hasError")) {
+	if (elem.focus && !LiveForm.getFormProperty(elem.form.id, "hasError")) {
 		if (!LiveForm.focusing) {
 			LiveForm.focusing = true;
 			elem.focus();
