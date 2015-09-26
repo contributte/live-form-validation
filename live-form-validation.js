@@ -2,7 +2,7 @@
  * Live Form Validation for Nette Forms 2.3
  *
  * @author Robert Pösel, zakrava, Radek Ježdík, MartyIX, David Grudl
- * @version 1.5.0
+ * @version 1.6.0
  * @url https://github.com/Robyer/nette-live-form-validation/
  */
 
