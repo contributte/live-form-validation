@@ -289,15 +289,15 @@ LiveForm.removeClass = function(el, className) {
 };
 
 LiveForm.getFormProperty = function(formId, propertyName) {
-	if (!this.forms[formId])
+	if (this.forms[formId] == null)
 		return false;
 
 	return this.forms[formId][propertyName];
 };
 
 LiveForm.setFormProperty = function(formId, propertyName, value) {
-	if (!this.forms[formId])
-		return;
+	if (this.forms[formId] == null)
+		this.forms[formId] = {};
 
 	this.forms[formId][propertyName] = value;
 };
