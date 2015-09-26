@@ -178,12 +178,14 @@ LiveForm.removeError = function(el) {
 		return;
 
 	var groupEl = this.getGroupElement(el);
-
 	this.removeClass(groupEl, this.options.controlErrorClass);
 
-	var messageEl = this.getMessageElement(el);
-	messageEl.innerHTML = '';
-	messageEl.className = '';
+	var id = el.getAttribute('data-lfv-message-id');
+	if (id) {
+		var messageEl = this.getMessageElement(el);
+		messageEl.innerHTML = '';
+		messageEl.className = '';
+	}
 
 	if (this.options.showValid && this.showValid(el)) {
 		this.addClass(groupEl, this.options.controlValidClass);
@@ -254,7 +256,9 @@ LiveForm.getMessageElement = function(el) {
 		}
 
 		var parentEl = this.getMessageParent(el);
-		parentEl.appendChild(messageEl);
+		if (parentEl) {
+			parentEl.appendChild(messageEl);
+		}
 	}
 
 	return messageEl;
