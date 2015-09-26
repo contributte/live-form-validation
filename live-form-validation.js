@@ -555,8 +555,8 @@ Nette.isDisabled = function(elem) {
  */
 Nette.addError = function(elem, message) {
 	// LiveForm: addition
-	var noLiveValidation = LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass) || (LiveForm.forms[elem.form.id] == null);
-	// User explicitly disabled live-validation or form wasn't initialized at all, so we want to show simple alerts
+	var noLiveValidation = LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass);
+	// User explicitly disabled live-validation so we want to show simple alerts
 	if (noLiveValidation) {
 		// notify errors for elements with disabled live validation (but only errors and not during onLoadValidation)
 		if (message && !LiveForm.getFormProperty(elem.form.id, "hasError") && !LiveForm.getFormProperty(elem.form.id, "onLoadValidation")) {
