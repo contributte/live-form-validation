@@ -73,7 +73,7 @@ LiveForm.isSpecialKey = function(k) {
  * Handlers for all the events that trigger validation
  * YOU CAN CHANGE these handlers (ie. to use jQuery events instead)
  */
-LiveForm.setUpHandlers = function(el) {
+LiveForm.setupHandlers = function(el) {
 	if (this.hasClass(el, this.options.disableLiveValidationClass)) return;
 
 	var handler = function(event) {
@@ -889,7 +889,7 @@ Nette.initForm = function(form) {
 
 	// LiveForm: addition
 	for (var i = 0; i < form.elements.length; i++) {
-		LiveForm.setUpHandlers(form.elements[i]);
+		LiveForm.setupHandlers(form.elements[i]);
 		LiveForm.processServerErrors(form.elements[i]);
 	}
 };
