@@ -12,6 +12,20 @@ The script already contains the `netteForms.js` file, so don't use it again and 
 
 Options
 -------
+You can change default options by calling `LiveForm.setOptions({ ... });` after including the script. Give only options that you want to change. For example:
+
+```js
+<script src="/js/live-form-validation.js"></script> 
+<script>
+	LiveForm.setOptions({
+		messageErrorPrefix: 'Error: ',
+		wait: 500
+	});
+</script> 
+```
+
+### Available options
+
 - **showMessageClassOnParent** - CSS class of control's parent where error/valid class should be added; or "false" to use control directly
 - **controlErrorClass** - CSS class for an invalid control
 - **controlValidClass** - CSS class for a valid control
