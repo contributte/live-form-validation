@@ -2,9 +2,25 @@
  * Live Form Validation for Nette Forms 2.3
  *
  * @author Robert Pösel, zakrava, Radek Ježdík, MartyIX, David Grudl
- * @version 1.6.0
+ * @version 1.6.1
  * @url https://github.com/Robyer/nette-live-form-validation/
  */
+
+var extend = function (defaults, options) {
+    var extended = {};
+    var prop;
+    for (prop in defaults) {
+        if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
+            extended[prop] = defaults[prop];
+        }
+    }
+    for (prop in options) {
+        if (Object.prototype.hasOwnProperty.call(options, prop)) {
+            extended[prop] = options[prop];
+        }
+    }
+    return extended;
+};
 
 var LiveForm = {
 	options: {
@@ -50,6 +66,19 @@ var LiveForm = {
 
 	forms: { }
 };
+
+/*
+ * extend options with custom user options if available
+ *
+ * Usage: set LiveFormOptions before calling live-form-validation.js
+ * var LiveFormOptions = {
+ *     // overwrite showValid:
+ *     showValid: true,
+ *     // clear messageErrorPrefix:
+ *     messageErrorPrefix: ''
+ * };
+ */
+LiveForm.options = extend(LiveForm.options, window.LiveFormOptions);
 
 LiveForm.isSpecialKey = function(k) {
 	// http://stackoverflow.com/questions/7770561/jquery-javascript-reject-control-keys-on-keydown-event
