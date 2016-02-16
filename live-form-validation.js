@@ -278,7 +278,7 @@ LiveForm.getMessageElement = function(el) {
 LiveForm.getMessageParent = function(el) {
 	var parentEl = el.parentNode;
 
-	if (this.options.messageParentClass !== false {
+	if (this.options.messageParentClass !== false) {
 		while (!this.hasClass(parentEl, this.options.messageParentClass)) {
 			parentEl = parentEl.parentNode;
 
