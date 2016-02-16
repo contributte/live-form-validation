@@ -2,7 +2,7 @@
  * Live Form Validation for Nette Forms 2.3
  *
  * @author Robert Pösel, zakrava, Radek Ježdík, MartyIX, David Grudl
- * @version 1.6.1
+ * @version 1.6.2
  * @url https://github.com/Robyer/nette-live-form-validation/
  */
 
@@ -10,6 +10,9 @@ var LiveForm = {
 	options: {
 		// CSS class of control's parent where error/valid class should be added; or "false" to use control directly
 		showMessageClassOnParent: 'form-group',
+
+		// CSS class of control's parent where error/valid message should be added (fallback to direct parent if not found); or "false" to use control's direct parent
+		messageParentClass: false,
 
 		// CSS class for an invalid control
 		controlErrorClass: 'has-error',
@@ -274,6 +277,18 @@ LiveForm.getMessageElement = function(el) {
 
 LiveForm.getMessageParent = function(el) {
 	var parentEl = el.parentNode;
+
+	if (this.options.messageParentClass !== false {
+		while (!this.hasClass(parentEl, this.options.messageParentClass)) {
+			parentEl = parentEl.parentNode;
+
+			if (parentEl === null) {
+				// We didn't found wanted parent, so use element's direct parent
+				parentEl = el.parentNode;
+				break;
+			}
+		}
+	}
 
 	// Don't append error message to radio/checkbox input's label, but along label
 	if (el.type) {
