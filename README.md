@@ -29,7 +29,7 @@ You can change default options by calling `LiveForm.setOptions({ ... });` after 
 Option | Description
 ------ | -----------
 **showMessageClassOnParent** | CSS class of control's parent where error/valid class should be added; or "false" to use control directly
-**messageParentClass* | CSS class of control's parent where error/valid message should be added (fallback to direct parent if not found); or "false" to use control's direct parent
+**messageParentClass** | CSS class of control's parent where error/valid message should be added (fallback to direct parent if not found); or "false" to use control's direct parent
 **controlErrorClass** | CSS class for an invalid control
 **controlValidClass** | CSS class for a valid control
 **messageErrorClass** | CSS class for an error message
