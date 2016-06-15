@@ -241,17 +241,31 @@ LiveForm.getGroupElement = function(el) {
 	return groupEl;
 }
 
+LiveForm.getMessageId = function(el) {
+	// For multi elements (with same name) we must create new unique id
+	if (el.name && !el.form.elements[el.name].tagName) {
+		// Strip possible [] from name
+		var name = el.name.match(/\[\]$/) ? el.name.match(/(.*)\[\]$/)[1] : el.name;
+
+		return el.form.id + "-" + name + this.options.messageIdPostfix;
+	} else {
+		var id = el.id + this.options.messageIdPostfix;
+
+		// We want unique ID which doesn't exist yet
+		var i = 0;
+		while (document.getElementById(id)) {
+			id = el.id + this.options.messageIdPostfix + '_' + ++i;
+		}
+
+		return id;
+	}
+}
+
 LiveForm.getMessageElement = function(el) {
 	var id = el.getAttribute('data-lfv-message-id');
 	if (!id) {
 		// Id is not specified yet, let's create a new one
-		id = el.id + this.options.messageIdPostfix;
-
-		var i = 0;
-		while (document.getElementById(id)) {
-			// We want unique ID which doesn't exist yet
-			id = el.id + this.options.messageIdPostfix + '_' + ++i;
-		}
+		id = this.getMessageId(el);
 
 		// Remember this id for next use
 		el.setAttribute('data-lfv-message-id', id);
@@ -277,14 +291,17 @@ LiveForm.getMessageElement = function(el) {
 
 LiveForm.getMessageParent = function(el) {
 	var parentEl = el.parentNode;
-
+	var parentFound = false;
+	
 	if (this.options.messageParentClass !== false) {
+		parentFound = true;
 		while (!this.hasClass(parentEl, this.options.messageParentClass)) {
 			parentEl = parentEl.parentNode;
 
 			if (parentEl === null) {
 				// We didn't found wanted parent, so use element's direct parent
 				parentEl = el.parentNode;
+				parentFound = false;
 				break;
 			}
 		}
@@ -296,6 +313,11 @@ LiveForm.getMessageParent = function(el) {
 		if ((type == 'checkbox' || type == 'radio') && parentEl.tagName == 'LABEL') {
 			parentEl = parentEl.parentNode;
 		}
+	}
+
+	// For multi elements (with same name) use parent's parent as parent (if wanted one is not found)
+	if (!parentFound && el.name && !el.form.elements[el.name].tagName) {
+		parentEl = parentEl.parentNode; 
 	}
 
 	return parentEl;
