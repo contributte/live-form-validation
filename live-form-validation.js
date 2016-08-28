@@ -396,7 +396,9 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 
 var Nette = {};
 
-Nette.stopOnError = true;
+// LiveForm: original netteForms.js code
+// Nette.formErrors = [];
+Nette.version = '2.4';
 
 
 /**
@@ -405,6 +407,12 @@ Nette.stopOnError = true;
 Nette.addEvent = function(element, on, callback) {
 	if (element.addEventListener) {
 		element.addEventListener(on, callback);
+	} else if (on === 'DOMContentLoaded') {
+		element.attachEvent('onreadystatechange', function() {
+			if (element.readyState === 'complete') {
+				callback.call(this);
+			}
+		});
 	} else {
 		element.attachEvent('on' + on, getHandler(callback));
 	}
@@ -497,7 +505,7 @@ Nette.getEffectiveValue = function(elem) {
 /**
  * Validates form element against given rules.
  */
-Nette.validateControl = function(elem, rules, onlyCheck, value) {
+Nette.validateControl = function(elem, rules, onlyCheck, value, emptyOptional) {
 	elem = elem.tagName ? elem : elem[0]; // RadioNodeList
 	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
 	value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
@@ -507,15 +515,20 @@ Nette.validateControl = function(elem, rules, onlyCheck, value) {
 			op = rule.op.match(/(~)?([^?]+)/),
 			curElem = rule.control ? elem.form.elements.namedItem(rule.control) : elem;
 
-		if (!curElem) {
-			continue;
-		}
-
 		rule.neg = op[1];
 		rule.op = op[2];
 		rule.condition = !!rule.rules;
-		curElem = curElem.tagName ? curElem : curElem[0]; // RadioNodeList
 
+		if (!curElem) {
+			continue;
+		} else if (rule.op === 'optional') {
+			emptyOptional = !Nette.validateRule(elem, ':filled', null, value);
+			continue;
+		} else if (emptyOptional && !rule.condition && rule.op !== ':filled') {
+			continue;
+		}
+
+		curElem = curElem.tagName ? curElem : curElem[0]; // RadioNodeList
 		var curValue = elem === curElem ? value : {value: Nette.getEffectiveValue(curElem)},
 			success = Nette.validateRule(curElem, rule.op, rule.arg, curValue);
 
@@ -526,7 +539,7 @@ Nette.validateControl = function(elem, rules, onlyCheck, value) {
 		}
 
 		if (rule.condition && success) {
-			if (!Nette.validateControl(elem, rule.rules, onlyCheck, value)) {
+			if (!Nette.validateControl(elem, rule.rules, onlyCheck, value, rule.op === ':blank' ? false : emptyOptional)) {
 				return false;
 			}
 		} else if (!rule.condition && !success) {
@@ -544,8 +557,10 @@ Nette.validateControl = function(elem, rules, onlyCheck, value) {
 		}
 	}
 
-	if (!onlyCheck && elem.type === 'number' && !elem.validity.valid) {
-		Nette.addError(elem, 'Please enter a valid value.');
+	if (elem.type === 'number' && !elem.validity.valid) {
+		if (!onlyCheck) {
+			Nette.addError(elem, 'Please enter a valid value.');
+		}
 		return false;
 	}
 
@@ -561,23 +576,30 @@ Nette.validateControl = function(elem, rules, onlyCheck, value) {
 /**
  * Validates whole form.
  */
-Nette.validateForm = function(sender) {
+Nette.validateForm = function(sender, onlyCheck) {
 	var form = sender.form || sender,
 		scope = false;
 
 	// LiveForm: addition
 	LiveForm.setFormProperty(form, "hasError", false);
 
+	// LiveForm: original netteForms.js code
+	// Nette.formErrors = [];
+
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
 		if (scopeArr.length) {
 			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
 		} else {
+			// LiveForm: original netteForms.js code
+			// Nette.showFormErrors(form, []);
 			return true;
 		}
 	}
 
-	var radios = {}, i, elem, success = true;
+	var radios = {}, i, elem;
+	// LiveForm: addition
+	var success = true;
 
 	for (i = 0; i < form.elements.length; i++) {
 		elem = form.elements[i];
@@ -596,13 +618,23 @@ Nette.validateForm = function(sender) {
 			continue;
 		}
 
+		// LiveForm: addition
 		success = Nette.validateControl(elem) && success;
-		// LiveForm: change
-		if (!success && !LiveForm.options.showAllErrors /*Nette.stopOnError*/) {
+		if (!success && !LiveForm.options.showAllErrors) {
 			break;
 		}
+		// LiveForm: original netteForms.js code
+		/*if (!Nette.validateControl(elem, null, onlyCheck) && !Nette.formErrors.length) {
+			return false;
+		}*/
 	}
+	// LiveForm: change
 	return success;
+
+	// LiveForm: original netteForms.js code
+	/*var success = !Nette.formErrors.length;
+	Nette.showFormErrors(form, Nette.formErrors);
+	return success;*/
 };
 
 
@@ -621,7 +653,7 @@ Nette.isDisabled = function(elem) {
 	return elem.disabled;
 };
 
-
+// LiveForm: change
 /**
  * Display error message.
  */
@@ -645,17 +677,50 @@ Nette.addError = function(elem, message) {
 	if (!noLiveValidation) {
 		LiveForm.addError(elem, message);
 	}
-
-	// LiveForm: original netteForms.js code
-	/*
-	if (message) {
-		alert(message);
-	}
-	if (elem.focus) {
-		elem.focus();
-	}
-	*/
 };
+
+
+// LiveForm: original netteForms.js code
+/**
+ * Adds error message to the queue.
+ */
+/*Nette.addError = function(elem, message) {
+	Nette.formErrors.push({
+		element: elem,
+		message: message
+	});
+};*/
+
+
+// LiveForm: original netteForms.js code
+/**
+ * Display error messages.
+ */
+/*Nette.showFormErrors = function(form, errors) {
+	var messages = [],
+		focusElem;
+
+	for (var i = 0; i < errors.length; i++) {
+		var elem = errors[i].element,
+			message = errors[i].message;
+
+		if (!Nette.inArray(messages, message)) {
+			messages.push(message);
+
+			if (!focusElem && elem.focus) {
+				focusElem = elem;
+			}
+		}
+	}
+
+	if (messages.length) {
+		alert(messages.join('\n'));
+
+		if (focusElem) {
+			focusElem.focus();
+		}
+	}
+};*/
 
 
 /**
@@ -1026,7 +1091,7 @@ Nette.initForm = function(form) {
  * @private
  */
 Nette.initOnLoad = function() {
-	Nette.addEvent(window, 'load', function() {
+	Nette.addEvent(document, 'DOMContentLoaded', function() {
 		for (var i = 0; i < document.forms.length; i++) {
 			var form = document.forms[i];
 			for (var j = 0; j < form.elements.length; j++) {
