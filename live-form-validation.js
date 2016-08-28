@@ -247,7 +247,7 @@ LiveForm.getMessageId = function(el) {
 		// Strip possible [] from name
 		var name = el.name.match(/\[\]$/) ? el.name.match(/(.*)\[\]$/)[1] : el.name;
 
-		return el.form.id + "-" + name + this.options.messageIdPostfix;
+		return (el.form.id ? el.form.id : 'frm') + '-' + name + this.options.messageIdPostfix;
 	} else {
 		var id = el.id + this.options.messageIdPostfix;
 
