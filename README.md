@@ -1,6 +1,6 @@
-Live Form Validation (for Nette Forms 2.3)
+Live Form Validation (for Nette Forms 2.4)
 ==========================================
-Nice client-side live form validation for Nette Forms 2.3.
+Nice client-side live form validation for Nette Forms 2.4.
 
 Script by default works nicely with Twitter Bootstrap 3, but you can customize the options to fit your exact needs.
 

@@ -1,6 +1,6 @@
 {
   "name": "nette-live-form-validation",
-  "description": "Nice client-side live form validation for Nette Forms 2.3. Script by default works nicely with Twitter Bootstrap 3.",
+  "description": "Nice client-side live form validation for Nette Forms 2.4. Script by default works nicely with Twitter Bootstrap 3.",
   "main": [
     "live-form-validation.js"
   ],
