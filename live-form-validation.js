@@ -62,6 +62,11 @@ LiveForm.setOptions = function(userOptions) {
 	}
 }
 
+// Allow setting options before loading the script just by creating global LiveFormOptions object with options.
+if (typeof window.LiveFormOptions !== 'undefined') {
+	LiveForm.setOptions(window.LiveFormOptions);
+}
+
 LiveForm.isSpecialKey = function(k) {
 	// http://stackoverflow.com/questions/7770561/jquery-javascript-reject-control-keys-on-keydown-event
 	return (k == 20 /* Caps lock */
