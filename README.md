@@ -12,7 +12,7 @@ The script already contains the `netteForms.js` file, so don't use it again and 
 
 Options
 -------
-You can change default options by calling `LiveForm.setOptions({ ... });` after including the script. Give only options that you want to change. For example:
+You can change default options by calling `LiveForm.setOptions({ ... });` **after** including the script. Give only options that you want to change. For example:
 
 ```js
 <script src="/js/live-form-validation.js"></script> 
@@ -22,6 +22,18 @@ You can change default options by calling `LiveForm.setOptions({ ... });` after 
 		wait: 500
 	});
 </script> 
+```
+
+Alternatively, if you want to set options **before** the script is loaded, create `LiveFormOptions = { ... };` with options that you want to change. For example:
+
+```js
+<script>
+	LiveFormOptions = {
+		messageErrorPrefix: 'Error: ',
+		wait: 500
+	};
+</script> 
+<script src="/js/live-form-validation.js"></script> 
 ```
 
 ### Available options
