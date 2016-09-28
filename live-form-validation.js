@@ -2,7 +2,7 @@
  * Live Form Validation for Nette Forms 2.4
  *
  * @author Robert Pösel, zakrava, Radek Ježdík, MartyIX, David Grudl
- * @version 1.8.0
+ * @version 1.8.1
  * @url https://github.com/Robyer/nette-live-form-validation/
  */
 
@@ -506,6 +506,12 @@ Nette.getEffectiveValue = function(elem) {
  * Validates form element against given rules.
  */
 Nette.validateControl = function(elem, rules, onlyCheck, value, emptyOptional) {
+	// LiveForm: addition
+	// Fix for CheckboxList - validation rules are present always only on first input
+	if (elem.name && elem.name.match(/\[\]$/) && elem.type.toLowerCase() == 'checkbox') {
+		elem = elem.form.elements[elem.name].tagName ? elem : elem.form.elements[elem.name][0];
+	}
+	
 	elem = elem.tagName ? elem : elem[0]; // RadioNodeList
 	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
 	value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
