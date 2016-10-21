@@ -2,7 +2,7 @@
  * Live Form Validation for Nette Forms 2.4
  *
  * @author Robert Pösel, zakrava, Radek Ježdík, MartyIX, David Grudl
- * @version 1.8.1
+ * @version 1.9.0-dev
  * @url https://github.com/Robyer/nette-live-form-validation/
  */
 
@@ -475,8 +475,16 @@ Nette.getValue = function(elem) {
 			values = [];
 
 		for (i = 0; i < elements.length; i++) {
-			if (elements[i].type !== 'checkbox' || elements[i].checked) {
+			// LiveForm: original netteForms.js code
+			/*if (elements[i].type !== 'checkbox' || elements[i].checked) {
 				values.push(elements[i].value);
+			}*/
+			// LiveForm: addition
+			var value = elements[i].value;
+			if (elements[i].type === 'checkbox' && elements[i].checked) {
+				values.push(value);
+			} else if (elements[i].type !== 'checkbox' && value !== '') {
+				values.push(value);
 			}
 		}
 		return values;
