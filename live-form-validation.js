@@ -247,29 +247,35 @@ LiveForm.getGroupElement = function(el) {
 }
 
 LiveForm.getMessageId = function(el) {
-	// For multi elements (with same name) we must create new unique id
-	if (el.name && !el.form.elements[el.name].tagName) {
+	var tmp = el.id + this.options.messageIdPostfix;
+	
+	// For elements without ID, or multi elements (with same name), we must generate whole ID ourselves
+	if (el.name && (!el.id || !el.form.elements[el.name].tagName)) {
 		// Strip possible [] from name
 		var name = el.name.match(/\[\]$/) ? el.name.match(/(.*)\[\]$/)[1] : el.name;
-
-		return (el.form.id ? el.form.id : 'frm') + '-' + name + this.options.messageIdPostfix;
-	} else {
-		var id = el.id + this.options.messageIdPostfix;
-
-		// We want unique ID which doesn't exist yet
-		var i = 0;
-		while (document.getElementById(id)) {
-			id = el.id + this.options.messageIdPostfix + '_' + ++i;
-		}
-
-		return id;
+		// Generate new ID based on form ID, element name and messageIdPostfix from options
+		tmp = (el.form.id ? el.form.id : 'frm') + '-' + name + this.options.messageIdPostfix;
 	}
+	
+	// We want unique ID which doesn't exist yet
+	var id = tmp,
+	    i = 0;
+	while (document.getElementById(id)) {
+		id = id + '_' + ++i;
+	}
+
+	return id;
 }
 
 LiveForm.getMessageElement = function(el) {
+	// For multi elements (with same name) work only with first element attributes
+	if (el.name && el.name.match(/\[\]$/)) {
+		el = el.form.elements[el.name].tagName ? el : el.form.elements[el.name][0];
+	}
+
 	var id = el.getAttribute('data-lfv-message-id');
 	if (!id) {
-		// Id is not specified yet, let's create a new one
+		// ID is not specified yet, let's create a new one
 		id = this.getMessageId(el);
 
 		// Remember this id for next use
