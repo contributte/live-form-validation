@@ -170,11 +170,12 @@ LiveForm.addError = function(el, message) {
 	if (this.hasClass(el, this.options.disableLiveValidationClass))
 		return;
 
+	var groupEl = this.getGroupElement(el);
 	this.setFormProperty(el.form, "hasError", true);
-	this.addClass(this.getGroupElement(el), this.options.controlErrorClass);
+	this.addClass(groupEl, this.options.controlErrorClass);
 
-	if (this.options.showValid && this.showValid(el)) {
-		this.removeClass(this.getGroupElement(el), this.options.controlValidClass);
+	if (this.options.showValid) {
+		this.removeClass(groupEl, this.options.controlValidClass);
 	}
 
 	if (!message) {
@@ -203,9 +204,11 @@ LiveForm.removeError = function(el) {
 		messageEl.className = '';
 	}
 
-	if (this.options.showValid && this.showValid(el)) {
-		this.addClass(groupEl, this.options.controlValidClass);
-		return;
+	if (this.options.showValid) {
+		if (this.showValid(el))
+			this.addClass(groupEl, this.options.controlValidClass);
+		else
+			this.removeClass(groupEl, this.options.controlValidClass);
 	}
 };
 
@@ -219,6 +222,10 @@ LiveForm.showValid = function(el) {
 
 	var rules = Nette.parseJSON(el.getAttribute('data-nette-rules'));
 	if (rules.length == 0) {
+		return false;
+	}
+  
+	if (Nette.getEffectiveValue(el) == '') {
 		return false;
 	}
 
