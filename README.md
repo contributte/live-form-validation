@@ -54,6 +54,7 @@ Option | Description
 **showAllErrors** | show all errors when submitting form; or use "false" to show only first error
 **showValid** | show message when valid
 **wait** | delay in ms before validating on keyup/keydown; or use "false" to disable it
+**focusScreenOffsetY** | vertical screen offset in px to scroll after focusing element with error (useful when using fixed navbar menu which may otherwise obscure the element in focus); or use "false" for default behavior
 
 #### Special features
 * **Form on load validation** - Adding class `validate-on-load` to form element will execute its validation immediately after page is loaded.

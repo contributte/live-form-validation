@@ -48,7 +48,10 @@ var LiveForm = {
 		showValid: false,
 
 		// delay in ms before validating on keyup/keydown; or use "false" to disable it
-		wait: false
+		wait: false,
+
+		// vertical screen offset in px to scroll after focusing element with error (useful when using fixed navbar menu which may otherwise obscure the element in focus); or use "false" for default behavior
+		focusScreenOffsetY: false
 	},
 
 	forms: { }
@@ -703,7 +706,16 @@ Nette.addError = function(elem, message) {
 		if (!LiveForm.focusing) {
 			LiveForm.focusing = true;
 			elem.focus();
-			setTimeout(function() { LiveForm.focusing = false; }, 10);
+			setTimeout(function() {
+				LiveForm.focusing = false;
+
+				// Scroll by defined offset (if enabled)
+				// NOTE: We use it with setTimetout because IE9 doesn't always catch instant scrollTo request
+				var focusOffsetY = LiveForm.options.focusScreenOffsetY;
+				if (focusOffsetY !== false && elem.getBoundingClientRect().top < focusOffsetY) {
+					window.scrollBy(0, elem.getBoundingClientRect().top - focusOffsetY);
+				}
+			}, 10);
 		}
 	}
 	if (!noLiveValidation) {
