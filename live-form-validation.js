@@ -1048,8 +1048,7 @@ Nette.toggleControl = function(elem, rules, success, firsttime, value) {
 
 			} else if (rule.neg) {
 				curSuccess = !curSuccess;
-			}
-			if (!rule.rules) {
+			} else if (!rule.rules) {
 				success = curSuccess;
 			}
 		}
