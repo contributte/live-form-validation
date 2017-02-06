@@ -992,6 +992,19 @@ Nette.validators = {
 			}
 		}
 		return true;
+	},
+
+	mimeType: function (elem, arg, val) {
+		arg = Nette.isArray(arg) ? arg : [arg];
+		if (window.FileList && val instanceof window.FileList) {
+			for (var i = 0; i < val.length; i++) {
+				var type = val[i].type;
+				if (type && arg.indexOf(type) === -1 ) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 };
 
