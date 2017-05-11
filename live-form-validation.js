@@ -963,6 +963,13 @@ Nette.validators = {
 				return null;
 			}
 		}
+		
+		if (elem.type === 'date') {
+			arg[0] = (arg[0] === null ? null : new Date(arg[0]).getTime());
+			arg[1] = (arg[1] === null ? null : new Date(arg[1]).getTime());
+			val = new Date(val).getTime()
+		}
+		
 		return Nette.isArray(arg) ?
 			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
 	},
