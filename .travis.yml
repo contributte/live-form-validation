@@ -1,0 +1,11 @@
+language: node_js
+
+node_js:
+  - "node"
+
+deploy:
+  provider: npm
+  email: rkfelix@gmail.com
+  api_key: $NPM_TOKEN
+  on:
+    tags: true
