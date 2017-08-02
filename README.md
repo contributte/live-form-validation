@@ -1,17 +1,50 @@
-Live Form Validation (for Nette Forms 2.4)
-==========================================
-Nice client-side live form validation for Nette Forms 2.4.
+# Live Form Validation
 
-Script by default works nicely with Twitter Bootstrap 3, but you can customize the options to fit your exact needs.
+:no_entry: Nice client-side live form validation for Nette Forms 2.4.
 
-Installation
-------------
+-----
+
+[![Build Status](https://img.shields.io/travis/contributte/live-form-validation.svg?style=flat-square)](https://travis-ci.org/contributte/live-form-validation)
+[![Licence](https://img.shields.io/github/license/contributte/live-form-validation.svg?style=flat-square)](https://github.com/contributte/live-form-validation)
+[![Downloads total](https://img.shields.io/npm/dt/live-form-validation.svg?style=flat-square)](https://www.npmjs.com/package/live-form-validation)
+[![Latest stable](https://img.shields.io/npm/v/live-form-validation.svg?style=flat-square)](https://www.npmjs.com/package/live-form-validation)
+
+## Discussion / Help
+
+[![Join the chat](https://img.shields.io/gitter/room/contributte/contributte.svg?style=flat-square)](http://bit.ly/ctteg)
+
+## Install
+
+### NPM
+
+```
+npm install --save live-form-validation
+```
+
+### Manually
+
 All you need is to link `live-form-validation.js` file from to your HTML document. That's it!
 
 The script already contains the `netteForms.js` file, so don't use it again and remove it from your HTML document.
 
-Options
--------
+### Rawgit
+
+- Dev: `https://rawgit.com/contributte/live-form-validation/master/live-form-validation.js`
+- Stable: `https://cdn.rawgit.com/contributte/live-form-validation/v1.8.1/live-form-validation.js`
+
+## Versions
+
+| State       | Version   | Branch   |
+|-------------|-----------|----------|
+| development | `^1.9.0`  | `master` |
+| stable      | `^1.8.1`  | `master` |
+
+## Usage
+
+Script by default works nicely with Twitter Bootstrap 3, but you can customize the options to fit your exact needs.
+
+### Options
+
 You can change default options by calling `LiveForm.setOptions({ ... });` **after** including the script. Give only options that you want to change. For example:
 
 ```js
@@ -62,8 +95,70 @@ Option | Description
 ### Advanced
 You can edit/replace methods `LiveForm.addError` (shows error message), `LiveForm.removeError` (hides error message), `LiveForm.showValid` (show message if input is correctly filled), `LiveForm.setupHandlers` (sets handlers up for inputs, like focus, blur, onkeyup). These methods can be altered to support some JS framework, ie. jQuery.
 
-Thanks to
----------
+## Maintainers
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/f3l1x">
+            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=150">
+        </a>
+        </br>
+        <a href="https://github.com/f3l1x">Milan Felix Šulc</a>
+      </td>
+    </tr>
+  <tbody>
+</table>
+
+## Authors
+
 This script is based on work of **Robert Pösel**, **zakrava**, **Radek Ježdík**, **MartyIX** and **David Grudl**.
 
 **Thank you all!**
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/Robyer">
+            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/359173?v=3&s=150">
+        </a>
+        </br>
+        <a href="https://github.com/Robyer">Robert Pösel</a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/zakrava">
+            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/9878014?v=3&s=150">
+        </a>
+        </br>
+        <a href="https://github.com/zakrava">Zakrava</a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/redhead">
+            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/158482?v=3&s=150">
+        </a>
+        </br>
+        <a href="https://github.com/redhead">Radek Ježdík</a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/MartyIX">
+            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/203266?v=3&s=150">
+        </a>
+        </br>
+        <a href="https://github.com/MartyIX">Martin Vseticka</a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/dg">
+            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/194960?v=3&s=150">
+        </a>
+        </br>
+        <a href="https://github.com/dg">David Grudl</a>
+      </td>
+    </tr>
+  <tbody>
+</table>
+
+---
+
+Thank you for testing, reporting and contributing.
