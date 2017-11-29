@@ -58,7 +58,7 @@ var LiveForm = {
 };
 
 LiveForm.setOptions = function(userOptions) {
-	for (prop in userOptions) {
+	for (var prop in userOptions) {
 		if (Object.prototype.hasOwnProperty.call(this.options, prop)) {
 			this.options[prop] = userOptions[prop];
 		}
