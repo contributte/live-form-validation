@@ -958,7 +958,6 @@ Nette.validators = {
 	range: function(elem, arg, val) {
 		if (elem.type === 'number') {
 			if ((elem.validity.rangeUnderflow && arg[0] !== null) || (elem.validity.rangeOverflow && arg[1] !== null)) {
-				debugger;
 				return false
 			} else if (elem.validity.badInput) {
 				return null;
