@@ -303,7 +303,7 @@ LiveForm.getMessageElement = function(el) {
 
 		var parentEl = this.getMessageParent(el);
 		if (parentEl) {
-			parentEl.appendChild(messageEl);
+			parentEl.insertBefore(messageEl, el.nextSibling);
 		}
 	}
 
