@@ -108,7 +108,7 @@ You can edit/replace methods `LiveForm.addError` (shows error message), `LiveFor
         <a href="https://github.com/f3l1x">Milan Felix Šulc</a>
       </td>
     </tr>
-  <tbody>
+  </tbody>
 </table>
 
 ## Authors
@@ -156,7 +156,7 @@ This script is based on work of **Robert Pösel**, **zakrava**, **Radek Ježdík
         <a href="https://github.com/dg">David Grudl</a>
       </td>
     </tr>
-  <tbody>
+  </tbody>
 </table>
 
 ---
