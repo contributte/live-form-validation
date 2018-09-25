@@ -908,11 +908,26 @@ Nette.validators = {
 		} catch (e) {}
 	},
 
-	pattern: function(elem, arg, val) {
-		try {
-			return typeof arg === 'string' ? (new RegExp('^(?:' + arg + ')$')).test(val) : null;
-		} catch (e) {}
-	},
+    pattern: function(elem, arg, val) {
+        if (typeof arg !== 'string') {
+            return null;
+        }
+
+        if (val instanceof FileList) {
+            try {
+                for (var i = 0; i < val.length; i++) {
+                    if ((new RegExp('^(?:' + arg + ')$')).test(val[i].name) === false) {
+                        return false;
+                    }
+                }
+                return true;
+            } catch (e) {}
+        } else {
+            try {
+                return (new RegExp('^(?:' + arg + ')$')).test(val);
+            } catch (e) {}
+        }
+    },
 
 	integer: function(elem, arg, val) {
 		if (elem.type === 'number' && elem.validity.badInput) {
