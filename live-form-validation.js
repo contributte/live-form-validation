@@ -6,8 +6,39 @@
  * @url https://github.com/Robyer/nette-live-form-validation/
  */
 
-var LiveForm = {
-	options: {
+(function (global, factoryLiveValidation, factoryNetteForm) {
+
+  if (typeof define === 'function' && define.amd) {
+	// AMD
+    define(function () {
+      return {
+        LiveForm: factoryLiveValidation(global),
+        Nette: factoryNetteForm(global)
+      }
+    })
+  } else if (typeof exports === 'object') {
+    // Node, CommonJS-like
+    module.exports = {
+		LiveForm: factoryLiveValidation(global),
+		Nette: factoryNetteForm(global)
+	}
+  } else {
+    global.LiveForm = factoryLiveValidation(global);
+    // Browser globals (root is window)
+	var init = !global.Nette || !global.Nette.noInit;
+	global.Nette = factoryNetteForm(global);
+	if (init) {
+		global.Nette.initOnLoad();
+	}
+  }
+  
+  
+}(typeof window !== 'undefined' ? window : this, function (window) {
+  'use strict'
+  
+
+  var LiveForm = {
+    options: {
 		// CSS class of control's parent where error/valid class should be added; or "false" to use control directly
 		showMessageClassOnParent: 'form-group',
 
@@ -383,6 +414,8 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 	this.forms[form.id][propertyName] = value;
 };
 
+return LiveForm;
+
 ////////////////////////////   modified netteForms.js   ///////////////////////////////////
 
 /**
@@ -392,6 +425,8 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+// LiveForm: original netteForms.js code
+/*
 (function(global, factory) {
 	if (!global.JSON) {
 		return;
@@ -412,7 +447,10 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 	}
 
 }(typeof window !== 'undefined' ? window : this, function(window) {
+*/
 
+// LiveForm: addition
+}, function (window) {
 'use strict';
 
 var Nette = {};
