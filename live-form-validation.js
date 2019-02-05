@@ -302,8 +302,10 @@ LiveForm.getMessageElement = function(el) {
 		}
 
 		var parentEl = this.getMessageParent(el);
-		if (parentEl) {
+		if (parentEl === el.parentNode) {
 			parentEl.insertBefore(messageEl, el.nextSibling);
+		} else if(parentEl) {
+			parentEl.append(messageEl);
 		}
 	}
 
