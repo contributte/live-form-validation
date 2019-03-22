@@ -514,7 +514,7 @@ Nette.getValue = function(elem) {
 		return elem.value.replace("\r", '');
 
 	} else {
-		return elem.value.replace("\r", '').replace(/^\s+|\s+$/g, '');
+		return elem.value.toString().replace("\r", '').replace(/^\s+|\s+$/g, '');
 	}
 };
 
