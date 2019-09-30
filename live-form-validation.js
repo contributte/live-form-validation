@@ -418,6 +418,7 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 	'use strict';
 
 	var Nette = {};
+	var formToggles = {};
 
 	// LiveForm: original netteForms.js code
 	// Nette.formErrors = [];
@@ -1025,15 +1026,15 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 	 */
 	Nette.toggleForm = function(form, elem) {
 		var i;
-		Nette.toggles = {};
+		formToggles = {};
 		for (i = 0; i < form.elements.length; i++) {
 			if (form.elements[i].tagName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1}) {
 				Nette.toggleControl(form.elements[i], null, null, !elem);
 			}
 		}
 
-		for (i in Nette.toggles) {
-			Nette.toggle(i, Nette.toggles[i], elem);
+		for (i in formToggles) {
+			Nette.toggle(i, formToggles[i], elem);
 		}
 	};
 
@@ -1092,7 +1093,7 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 				}
 				for (var id2 in rule.toggle || []) {
 					if (Object.prototype.hasOwnProperty.call(rule.toggle, id2)) {
-						Nette.toggles[id2] = Nette.toggles[id2] || (rule.toggle[id2] ? curSuccess : !curSuccess);
+						formToggles[id2] = formToggles[id2] || (rule.toggle[id2] ? curSuccess : !curSuccess);
 					}
 				}
 			}
