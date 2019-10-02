@@ -418,6 +418,7 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 	'use strict';
 
 	var Nette = {};
+	var preventFiltering = {};
 	var formToggles = {};
 
 	// LiveForm: original netteForms.js code
@@ -518,10 +519,12 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 				val = '';
 			}
 		}
-		if (filter) {
+		if (filter && preventFiltering[elem.name] === undefined) {
+			preventFiltering[elem.name] = true;
 			var ref = {value: val};
 			Nette.validateControl(elem, null, true, ref);
 			val = ref.value;
+			delete preventFiltering[elem.name];
 		}
 		return val;
 	};
@@ -762,8 +765,6 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
     };*/
 
 
-	var preventFiltering = false;
-
 	/**
 	 * Validates single rule.
 	 */
@@ -777,16 +778,13 @@ LiveForm.setFormProperty = function(form, propertyName, value) {
 		op = op.replace(/\\/g, '');
 
 		var arr = Array.isArray(arg) ? arg.slice(0) : [arg];
-		if (!preventFiltering) {
-			preventFiltering = true;
-			for (var i = 0, len = arr.length; i < len; i++) {
-				if (arr[i] && arr[i].control) {
-					var control = elem.form.elements.namedItem(arr[i].control);
-					arr[i] = control === elem ? value.value : Nette.getEffectiveValue(control, true);
-				}
+		for (var i = 0, len = arr.length; i < len; i++) {
+			if (arr[i] && arr[i].control) {
+				var control = elem.form.elements.namedItem(arr[i].control);
+				arr[i] = control === elem ? value.value : Nette.getEffectiveValue(control, true);
 			}
-			preventFiltering = false;
 		}
+
 		return Nette.validators[op]
 			? Nette.validators[op](elem, Array.isArray(arg) ? arr : arr[0], value.value, value)
 			: null;
