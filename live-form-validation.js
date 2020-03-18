@@ -935,7 +935,7 @@ Nette.validators = {
 		if (elem.type === 'number' && elem.validity.badInput) {
 			return false;
 		}
-		return (/^(-?[0-9]+)?$/).test(val);
+		return (/^-?[0-9]+$/).test(val);
 	},
 
 	'float': function(elem, arg, val, value) {
@@ -943,7 +943,7 @@ Nette.validators = {
 			return false;
 		}
 		val = val.replace(' ', '').replace(',', '.');
-		if ((/^(-?[0-9]*[.,]?[0-9]+)?$/).test(val)) {
+		if ((/^-?[0-9]*[.,]?[0-9]+$/).test(val)) {
 			value.value = val;
 			return true;
 		}
