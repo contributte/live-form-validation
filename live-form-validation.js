@@ -547,6 +547,8 @@ Nette.validateControl = function(elem, rules, onlyCheck, value, emptyOptional) {
 	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
 	value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
 
+	emptyOptional = emptyOptional || !elem.required && elem.value === '';
+
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id],
 			op = rule.op.match(/(~)?([^?]+)/),
