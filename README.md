@@ -1,6 +1,6 @@
 # Live Form Validation
 
-:no_entry: Nice client-side live form validation for Nette Forms 2.4.
+:no_entry: Nice client-side live form validation for Nette Forms 3.0.
 
 -----
 
@@ -12,6 +12,13 @@
 ## Discussion / Help
 
 [![Join the chat](https://img.shields.io/gitter/room/contributte/contributte.svg?style=flat-square)](http://bit.ly/ctteg)
+
+## Versions
+
+| State       | Version       | Branch   |
+|-------------|---------------|----------|
+| development | `dev-master`  | `master` |
+| stable      | `^1.9.0`      | `master` |
 
 ## Install
 
@@ -27,17 +34,15 @@ All you need is to link `live-form-validation.js` file from to your HTML documen
 
 The script already contains the `netteForms.js` file, so don't use it again and remove it from your HTML document.
 
-### Rawgit
+### CDN
 
-- Dev: `https://rawgit.com/contributte/live-form-validation/master/live-form-validation.js`
-- Stable: `https://cdn.rawgit.com/contributte/live-form-validation/v1.8.1/live-form-validation.js`
+- Dev: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@master/live-form-validation.js`
+- Stable: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@v1.9.0/live-form-validation.js`
 
-## Versions
+**Nette**
 
-| State       | Version   | Branch   |
-|-------------|-----------|----------|
-| development | `^1.9.0`  | `master` |
-| stable      | `^1.8.1`  | `master` |
+- Nette 3.0: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@master/live-form-validation.js`
+- Nette 2.4: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@v1.9.0/live-form-validation.js`
 
 ## Usage
 
