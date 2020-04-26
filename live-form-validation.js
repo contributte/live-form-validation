@@ -85,10 +85,10 @@
             focusScreenOffsetY: false
         },
 
-        forms: { }
+        forms: {}
     };
 
-    LiveForm.setOptions = function(userOptions) {
+    LiveForm.setOptions = function (userOptions) {
         for (var prop in userOptions) {
             if (Object.prototype.hasOwnProperty.call(this.options, prop)) {
                 this.options[prop] = userOptions[prop];
@@ -101,7 +101,7 @@
         LiveForm.setOptions(window.LiveFormOptions);
     }
 
-    LiveForm.isSpecialKey = function(k) {
+    LiveForm.isSpecialKey = function (k) {
         // http://stackoverflow.com/questions/7770561/jquery-javascript-reject-control-keys-on-keydown-event
         return (k == 20 /* Caps lock */
             || k == 16 /* Shift */
@@ -123,7 +123,7 @@
      * Handlers for all the events that trigger validation
      * YOU CAN CHANGE these handlers (ie. to use jQuery events instead)
      */
-    LiveForm.setupHandlers = function(el) {
+    LiveForm.setupHandlers = function (el) {
         if (this.hasClass(el, this.options.disableLiveValidationClass))
             return;
 
@@ -134,7 +134,7 @@
         // Remember we initialized this element so we won't do it again
         el.setAttribute('data-lfv-initialized', 'true');
 
-        var handler = function(event) {
+        var handler = function (event) {
             event = event || window.event;
             Nette.validateControl(event.target ? event.target : event.srcElement);
         };
@@ -164,7 +164,7 @@
                 event = event || window.event;
                 if (event.keyCode !== 9) {
                     if (self.timeout) clearTimeout(self.timeout);
-                    self.timeout = setTimeout(function() {
+                    self.timeout = setTimeout(function () {
                         handler(event);
                     }, self.options.wait);
                 }
@@ -172,7 +172,7 @@
         });
     };
 
-    LiveForm.processServerErrors = function(el) {
+    LiveForm.processServerErrors = function (el) {
         var messageEl = this.getMessageElement(el);
         var parentEl = this.getMessageParent(el); // This is parent element which contain the error elements
 
@@ -199,7 +199,7 @@
         }
     };
 
-    LiveForm.addError = function(el, message) {
+    LiveForm.addError = function (el, message) {
         // Ignore elements with disabled live validation
         if (this.hasClass(el, this.options.disableLiveValidationClass))
             return;
@@ -223,7 +223,7 @@
         messageEl.className = this.options.messageErrorClass;
     };
 
-    LiveForm.removeError = function(el) {
+    LiveForm.removeError = function (el) {
         // We don't want to remove any errors during onLoadValidation
         if (this.getFormProperty(el.form, "onLoadValidation"))
             return;
@@ -246,7 +246,7 @@
         }
     };
 
-    LiveForm.showValid = function(el) {
+    LiveForm.showValid = function (el) {
         if (el.type) {
             var type = el.type.toLowerCase();
             if (type == 'checkbox' || type == 'radio') {
@@ -270,7 +270,7 @@
         return true;
     };
 
-    LiveForm.getGroupElement = function(el) {
+    LiveForm.getGroupElement = function (el) {
         if (this.options.showMessageClassOnParent === false)
             return el;
 
@@ -287,7 +287,7 @@
         return groupEl;
     }
 
-    LiveForm.getMessageId = function(el) {
+    LiveForm.getMessageId = function (el) {
         var tmp = el.id + this.options.messageIdPostfix;
 
         // For elements without ID, or multi elements (with same name), we must generate whole ID ourselves
@@ -308,7 +308,7 @@
         return id;
     }
 
-    LiveForm.getMessageElement = function(el) {
+    LiveForm.getMessageElement = function (el) {
         // For multi elements (with same name) work only with first element attributes
         if (el.name && el.name.match(/\[\]$/)) {
             el = el.form.elements[el.name].tagName ? el : el.form.elements[el.name][0];
@@ -335,7 +335,7 @@
             var parentEl = this.getMessageParent(el);
             if (parentEl === el.parentNode) {
                 parentEl.insertBefore(messageEl, el.nextSibling);
-            } else if(parentEl) {
+            } else if (parentEl) {
                 typeof parentEl.append === 'function' ? parentEl.append(messageEl) : parentEl.appendChild(messageEl);
             }
         }
@@ -343,7 +343,7 @@
         return messageEl;
     };
 
-    LiveForm.getMessageParent = function(el) {
+    LiveForm.getMessageParent = function (el) {
         var parentEl = el.parentNode;
         var parentFound = false;
 
@@ -377,7 +377,7 @@
         return parentEl;
     }
 
-    LiveForm.addClass = function(el, className) {
+    LiveForm.addClass = function (el, className) {
         if (!el.className) {
             el.className = className;
         } else if (!this.hasClass(el, className)) {
@@ -385,28 +385,28 @@
         }
     };
 
-    LiveForm.hasClass = function(el, className) {
+    LiveForm.hasClass = function (el, className) {
         if (el.className)
             return el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
         return false;
     };
 
-    LiveForm.removeClass = function(el, className) {
+    LiveForm.removeClass = function (el, className) {
         if (this.hasClass(el, className)) {
-            var reg = new RegExp('(\\s|^)'+ className + '(\\s|$)');
+            var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
             var m = el.className.match(reg);
             el.className = el.className.replace(reg, (m[1] == ' ' && m[2] == ' ') ? ' ' : '');
         }
     };
 
-    LiveForm.getFormProperty = function(form, propertyName) {
+    LiveForm.getFormProperty = function (form, propertyName) {
         if (form == null || this.forms[form.id] == null)
             return false;
 
         return this.forms[form.id][propertyName];
     };
 
-    LiveForm.setFormProperty = function(form, propertyName, value) {
+    LiveForm.setFormProperty = function (form, propertyName, value) {
         if (form == null)
             return;
 
@@ -463,7 +463,7 @@
      * Function to execute when the DOM is fully loaded.
      * @private
      */
-    Nette.onDocumentReady = function(callback) {
+    Nette.onDocumentReady = function (callback) {
         if (document.readyState !== 'loading') {
             callback.call(this);
         } else {
@@ -472,16 +472,14 @@
     };
 
 
-
-
     /**
      * Attaches a handler to an event for the element.
      */
-    Nette.addEvent = function(element, on, callback) {
+    Nette.addEvent = function (element, on, callback) {
         if (element.addEventListener) {
             element.addEventListener(on, callback);
         } else if (on === 'DOMContentLoaded') {
-            element.attachEvent('onreadystatechange', function() {
+            element.attachEvent('onreadystatechange', function () {
                 if (element.readyState === 'complete') {
                     callback.call(this);
                 }
@@ -494,7 +492,7 @@
     /**
      * Returns the value of form element.
      */
-    Nette.getValue = function(elem) {
+    Nette.getValue = function (elem) {
         var i;
         if (!elem) {
             return null;
@@ -564,7 +562,7 @@
     /**
      * Returns the effective value of form element.
      */
-    Nette.getEffectiveValue = function(elem, filter) {
+    Nette.getEffectiveValue = function (elem, filter) {
         var val = Nette.getValue(elem);
         if (elem.getAttribute) {
             if (val === elem.getAttribute('data-nette-empty-value')) {
@@ -585,7 +583,7 @@
     /**
      * Validates form element against given rules.
      */
-    Nette.validateControl = function(elem, rules, onlyCheck, value, emptyOptional) {
+    Nette.validateControl = function (elem, rules, onlyCheck, value, emptyOptional) {
         // LiveForm: addition
         // Fix for CheckboxList - validation rules are present always only on first input
         if (elem.name && elem.name.match(/\[\]$/) && elem.type.toLowerCase() == 'checkbox') {
@@ -631,7 +629,7 @@
                 }
                 if (!onlyCheck) {
                     var arr = Array.isArray(rule.arg) ? rule.arg : [rule.arg],
-                        message = rule.msg.replace(/%(value|\d+)/g, function(foo, m) {
+                        message = rule.msg.replace(/%(value|\d+)/g, function (foo, m) {
                             return Nette.getValue(m === 'value' ? curElem : elem.form.elements.namedItem(arr[m].control));
                         });
                     Nette.addError(curElem, message);
@@ -659,7 +657,7 @@
     /**
      * Validates whole form.
      */
-    Nette.validateForm = function(sender, onlyCheck) {
+    Nette.validateForm = function (sender, onlyCheck) {
         var form = sender.form || sender,
             scope = false;
 
@@ -725,7 +723,7 @@
     /**
      * Check if input is disabled.
      */
-    Nette.isDisabled = function(elem) {
+    Nette.isDisabled = function (elem) {
         if (elem.type === 'radio') {
             for (var i = 0, elements = elem.form.elements; i < elements.length; i++) {
                 if (elements[i].name === elem.name && !elements[i].disabled) {
@@ -742,7 +740,7 @@
     /**
      * Display error message.
      */
-    Nette.addError = function(elem, message) {
+    Nette.addError = function (elem, message) {
         // LiveForm: addition
         var noLiveValidation = LiveForm.hasClass(elem, LiveForm.options.disableLiveValidationClass);
         // User explicitly disabled live-validation so we want to show simple alerts
@@ -756,7 +754,7 @@
             if (!LiveForm.focusing) {
                 LiveForm.focusing = true;
                 elem.focus();
-                setTimeout(function() {
+                setTimeout(function () {
                     LiveForm.focusing = false;
 
                     // Scroll by defined offset (if enabled)
@@ -815,7 +813,7 @@
     /**
      * Validates single rule.
      */
-    Nette.validateRule = function(elem, op, arg, value) {
+    Nette.validateRule = function (elem, op, arg, value) {
         value = value === undefined ? {value: Nette.getEffectiveValue(elem, true)} : value;
 
         if (op.charAt(0) === ':') {
@@ -839,7 +837,7 @@
 
 
     Nette.validators = {
-        filled: function(elem, arg, val) {
+        filled: function (elem, arg, val) {
             if (elem.type === 'number' && elem.validity.badInput) {
                 return true;
             }
@@ -848,15 +846,15 @@
                 && (!window.FileList || !(val instanceof window.FileList) || val.length);
         },
 
-        blank: function(elem, arg, val) {
+        blank: function (elem, arg, val) {
             return !Nette.validators.filled(elem, arg, val);
         },
 
-        valid: function(elem) {
+        valid: function (elem) {
             return Nette.validateControl(elem, null, true);
         },
 
-        equal: function(elem, arg, val) {
+        equal: function (elem, arg, val) {
             if (arg === undefined) {
                 return null;
             }
@@ -883,11 +881,11 @@
             return true;
         },
 
-        notEqual: function(elem, arg, val) {
+        notEqual: function (elem, arg, val) {
             return arg === undefined ? null : !Nette.validators.equal(elem, arg, val);
         },
 
-        minLength: function(elem, arg, val) {
+        minLength: function (elem, arg, val) {
             if (elem.type === 'number') {
                 if (elem.validity.tooShort) {
                     return false;
@@ -898,7 +896,7 @@
             return val.length >= arg;
         },
 
-        maxLength: function(elem, arg, val) {
+        maxLength: function (elem, arg, val) {
             if (elem.type === 'number') {
                 if (elem.validity.tooLong) {
                     return false;
@@ -909,7 +907,7 @@
             return val.length <= arg;
         },
 
-        length: function(elem, arg, val) {
+        length: function (elem, arg, val) {
             if (elem.type === 'number') {
                 if (elem.validity.tooShort || elem.validity.tooLong) {
                     return false;
@@ -921,11 +919,11 @@
             return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
         },
 
-        email: function(elem, arg, val) {
+        email: function (elem, arg, val) {
             return (/^("([ !#-[\]-~]|\\[ -~])+"|[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*)@([0-9a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,61}[0-9a-z\u00C0-\u02FF\u0370-\u1EFF])?\.)+[a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,17}[a-z\u00C0-\u02FF\u0370-\u1EFF])?$/i).test(val);
         },
 
-        url: function(elem, arg, val, value) {
+        url: function (elem, arg, val, value) {
             if (!(/^[a-z\d+.-]+:/).test(val)) {
                 val = 'http://' + val;
             }
@@ -936,14 +934,15 @@
             return false;
         },
 
-        regexp: function(elem, arg, val) {
+        regexp: function (elem, arg, val) {
             var parts = typeof arg === 'string' ? arg.match(/^\/(.*)\/([imu]*)$/) : false;
             try {
                 return parts && (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
-            } catch (e) {} // eslint-disable-line no-empty
+            } catch (e) {
+            } // eslint-disable-line no-empty
         },
 
-        pattern: function(elem, arg, val, value, caseInsensitive) {
+        pattern: function (elem, arg, val, value, caseInsensitive) {
             if (typeof arg !== 'string') {
                 return null;
             }
@@ -966,28 +965,29 @@
                 }
 
                 return regExp.test(val);
-            } catch (e) {} // eslint-disable-line no-empty
+            } catch (e) {
+            } // eslint-disable-line no-empty
         },
 
-        patternCaseInsensitive: function(elem, arg, val) {
+        patternCaseInsensitive: function (elem, arg, val) {
             return Nette.validators.pattern(elem, arg, val, null, true);
         },
 
-        numeric: function(elem, arg, val) {
+        numeric: function (elem, arg, val) {
             if (elem.type === 'number' && elem.validity.badInput) {
                 return false;
             }
             return (/^[0-9]+$/).test(val);
         },
 
-        integer: function(elem, arg, val) {
+        integer: function (elem, arg, val) {
             if (elem.type === 'number' && elem.validity.badInput) {
                 return false;
             }
             return (/^-?[0-9]+$/).test(val);
         },
 
-        'float': function(elem, arg, val, value) {
+        'float': function (elem, arg, val, value) {
             if (elem.type === 'number' && elem.validity.badInput) {
                 return false;
             }
@@ -999,7 +999,7 @@
             return false;
         },
 
-        min: function(elem, arg, val) {
+        min: function (elem, arg, val) {
             if (elem.type === 'number') {
                 if (elem.validity.rangeUnderflow) {
                     return false;
@@ -1010,7 +1010,7 @@
             return arg === null || parseFloat(val) >= arg;
         },
 
-        max: function(elem, arg, val) {
+        max: function (elem, arg, val) {
             if (elem.type === 'number') {
                 if (elem.validity.rangeOverflow) {
                     return false;
@@ -1021,7 +1021,7 @@
             return arg === null || parseFloat(val) <= arg;
         },
 
-        range: function(elem, arg, val) {
+        range: function (elem, arg, val) {
             if (elem.type === 'number') {
                 if (elem.validity.rangeUnderflow || elem.validity.rangeOverflow) {
                     return false;
@@ -1033,11 +1033,11 @@
                 ((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
         },
 
-        submitted: function(elem) {
+        submitted: function (elem) {
             return elem.form['nette-submittedBy'] === elem;
         },
 
-        fileSize: function(elem, arg, val) {
+        fileSize: function (elem, arg, val) {
             if (window.FileList) {
                 for (var i = 0; i < val.length; i++) {
                     if (val[i].size > arg) {
@@ -1069,7 +1069,7 @@
     /**
      * Process all toggles in form.
      */
-    Nette.toggleForm = function(form, elem) {
+    Nette.toggleForm = function (form, elem) {
         var i;
         formToggles = {};
         for (i = 0; i < form.elements.length; i++) {
@@ -1087,7 +1087,7 @@
     /**
      * Process toggles on form element.
      */
-    Nette.toggleControl = function(elem, rules, success, firsttime, value) {
+    Nette.toggleControl = function (elem, rules, success, firsttime, value) {
         rules = rules || JSON.parse(elem.getAttribute('data-nette-rules') || '[]');
         value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
 
@@ -1150,7 +1150,7 @@
     /**
      * Displays or hides HTML element.
      */
-    Nette.toggle = function(selector, visible, srcElement) { // eslint-disable-line no-unused-vars
+    Nette.toggle = function (selector, visible, srcElement) { // eslint-disable-line no-unused-vars
         if (/^\w[\w.:-]*$/.test(selector)) { // id
             selector = '#' + selector;
         }
@@ -1164,7 +1164,7 @@
     /**
      * Setup handlers.
      */
-    Nette.initForm = function(form) {
+    Nette.initForm = function (form) {
         Nette.toggleForm(form);
 
         if (form.noValidate) {
@@ -1179,7 +1179,7 @@
             onLoadValidation: false
         };
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             if (!Nette.validateForm(form)) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -1196,8 +1196,8 @@
     /**
      * @private
      */
-    Nette.initOnLoad = function() {
-        Nette.addEvent(document, 'DOMContentLoaded', function() {
+    Nette.initOnLoad = function () {
+        Nette.addEvent(document, 'DOMContentLoaded', function () {
             // LiveForm: original netteForms.js code
             /*
                     for (var i = 0; i < document.forms.length; i++) {
@@ -1227,7 +1227,7 @@
      *
      * @public
      */
-    Nette.init = function() {
+    Nette.init = function () {
         for (var i = 0; i < document.forms.length; i++) {
             var form = document.forms[i];
             for (var j = 0; j < form.elements.length; j++) {
@@ -1246,7 +1246,7 @@
             }
         }
 
-        Nette.addEvent(document.body, 'click', function(e) {
+        Nette.addEvent(document.body, 'click', function (e) {
             var target = e.target || e.srcElement;
             if (target.form && target.type in {submit: 1, image: 1}) {
                 target.form['nette-submittedBy'] = target;
@@ -1258,7 +1258,7 @@
     /**
      * Determines whether the argument is an array.
      */
-    Nette.isArray = function(arg) {
+    Nette.isArray = function (arg) {
         return Object.prototype.toString.call(arg) === '[object Array]';
     };
 
@@ -1266,7 +1266,7 @@
     /**
      * Search for a specified value within an array.
      */
-    Nette.inArray = function(arr, val) {
+    Nette.inArray = function (arr, val) {
         if ([].indexOf) {
             return arr.indexOf(val) > -1;
         } else {
@@ -1283,7 +1283,7 @@
     /**
      * Converts string to web safe characters [a-z0-9-] text.
      */
-    Nette.webalize = function(s) {
+    Nette.webalize = function (s) {
         s = s.toLowerCase();
         var res = '', i, ch;
         for (i = 0; i < s.length; i++) {
