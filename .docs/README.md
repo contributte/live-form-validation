@@ -16,7 +16,7 @@
 
 ### NPM
 
-```
+```bash
 npm install --save live-form-validation
 ```
 
