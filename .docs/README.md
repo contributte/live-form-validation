@@ -3,14 +3,14 @@
 ## Content
 
 - [Install](#install)
-    - [NPM](#npm)
-    - [Manually](#manually)
-    - [CDN](#cdn)
+	- [NPM](#npm)
+	- [Manually](#manually)
+	- [CDN](#cdn)
 - [Usage](#usage)
-    - [Options](#options)
-    - [Available options](#available-options)
-    - [Special features](#special-features)
-    - [Advanced](#advanced)
+	- [Options](#options)
+	- [Available options](#available-options)
+	- [Special features](#special-features)
+	- [Advanced](#advanced)
 
 ## Install
 
@@ -47,10 +47,10 @@ You can change default options by calling `LiveForm.setOptions({ ... });` **afte
 ```js
 <script src="/js/live-form-validation.js"></script> 
 <script>
-	LiveForm.setOptions({
-		messageErrorPrefix: 'Error: ',
-		wait: 500
-	});
+    LiveForm.setOptions({
+        messageErrorPrefix: 'Error: ',
+        wait: 500
+    });
 </script> 
 ```
 
@@ -58,10 +58,10 @@ Alternatively, if you want to set options **before** the script is loaded, creat
 
 ```js
 <script>
-	LiveFormOptions = {
-		messageErrorPrefix: 'Error: ',
-		wait: 500
-	};
+    LiveFormOptions = {
+        messageErrorPrefix: 'Error: ',
+        wait: 500
+    };
 </script> 
 <script src="/js/live-form-validation.js"></script> 
 ```
