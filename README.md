@@ -26,7 +26,7 @@ For details on how to use this package, check out our [documentation](.docs).
 | State       | Version       | Branch   |
 |-------------|---------------|----------|
 | dev         | `dev-master`  | `master` |
-| stable      | `^1.9.0`      | `master` |
+| stable      | `^1.10.0`     | `master` |
 
 ## Development
 
