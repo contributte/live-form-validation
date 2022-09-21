@@ -94,6 +94,12 @@ Option | Description
 
 You can edit/replace methods `LiveForm.addError` (shows error message), `LiveForm.removeError` (hides error message), `LiveForm.showValid` (show message if input is correctly filled), `LiveForm.setupHandlers` (sets handlers up for inputs, like focus, blur, onkeyup). These methods can be altered to support some JS framework, ie. jQuery.
 
+If you need re-validate form e.g. fiiling form from AJAX request write code sometibng like that:
+
+```javascript
+Nette.validateControl($('#exampleForm-foo'));
+```
+
 ### Authors 
 
 This script is based on work of **Robert Pösel**, **zakrava**, **Radek Ježdík**, **MartyIX** and **David Grudl**. Thank you guys.
