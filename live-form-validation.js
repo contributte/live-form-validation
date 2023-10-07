@@ -1183,7 +1183,9 @@
             if (!Nette.validateForm(form)) {
                 e.stopPropagation();
                 e.preventDefault();
+                return;
             }
+            form.dispatchEvent(new Event("success"));
         });
 
         // LiveForm: addition
