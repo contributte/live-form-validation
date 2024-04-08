@@ -13,6 +13,9 @@
     "validation",
     "bootstrap"
   ],
+  "files": [
+    "live-form-validation.js"
+  ],
   "author": "Nette Community",
   "license": "BSD-3-Clause",
   "bugs": {
