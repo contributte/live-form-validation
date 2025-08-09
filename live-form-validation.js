@@ -136,7 +136,9 @@
 
         var handler = function (event) {
             event = event || window.event;
-            Nette.validateControl(event.target ? event.target : event.srcElement);
+            var elem = event.target ? event.target : event.srcElement;
+            Nette.validateControl(elem);
+            Nette.toggleForm(elem.form, elem);
         };
 
         var self = this;
