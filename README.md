@@ -17,7 +17,14 @@
 Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact 👨🏻‍💻 <a href="https://f3l1x.io">f3l1x.io</a> | Twitter 🐦 <a href="https://twitter.com/contributte">@contributte</a>
 </p>
 
-## Documentation
+Nice client-side live form validation for Nette Forms 3.0. Script by default works nicely with Twitter Bootstrap 4.
+
+## Versions
+
+| State       | Version       | Branch   |
+|-------------|---------------|----------|
+| dev         | `dev-master`  | `master` |
+| stable      | `^1.10.0`     | `master` |
 
 ## Content
 
@@ -122,13 +129,6 @@ Nette.validateControl($('#exampleForm-foo'));
 ### Authors
 
 This script is based on work of **Robert Pösel**, **zakrava**, **Radek Ježdík**, **MartyIX** and **David Grudl**. Thank you guys.
-
-## Versions
-
-| State       | Version       | Branch   |
-|-------------|---------------|----------|
-| dev         | `dev-master`  | `master` |
-| stable      | `^1.10.0`     | `master` |
 
 ## Development
 
