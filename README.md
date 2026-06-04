@@ -2,11 +2,11 @@
 
 <p align=center>
   <a href="https://github.com/contributte/live-form-validation/actions"><img src="https://badgen.net/github/checks/contributte/live-form-validation/master?cache=300"></a>
-  <a href="https://packagist.org/packages/contributte/live-form-validation"><img src="https://badgen.net/npm/dm/live-form-validation"></a>
-  <a href="https://packagist.org/packages/contributte/live-form-validation"><img src="https://badgen.net/npm/v/live-form-validation"></a>
+  <a href="https://www.npmjs.com/package/live-form-validation"><img src="https://badgen.net/npm/dm/live-form-validation"></a>
+  <a href="https://www.npmjs.com/package/live-form-validation"><img src="https://badgen.net/npm/v/live-form-validation"></a>
 </p>
 <p align=center>
-  <a href="https://packagist.org/packages/contributte/live-form-validation"><img src="https://badgen.net/npm/node/live-form-validation"></a>
+  <a href="https://www.npmjs.com/package/live-form-validation"><img src="https://badgen.net/npm/node/live-form-validation"></a>
   <a href="https://github.com/contributte/live-form-validation"><img src="https://badgen.net/github/license/contributte/live-form-validation"></a>
   <a href="https://bit.ly/ctteg"><img src="https://badgen.net/badge/support/gitter/cyan"></a>
   <a href="https://bit.ly/cttfo"><img src="https://badgen.net/badge/support/forum/yellow"></a>
@@ -26,9 +26,9 @@ Nice client-side live form validation for Nette Forms 3.0. Script by default wor
 | dev         | `dev-master`  | `master` |
 | stable      | `^1.10.0`     | `master` |
 
-## Content
+## Contents
 
-- [Install](#install)
+- [Installation](#installation)
 	- [NPM](#npm)
 	- [Manually](#manually)
 	- [CDN](#cdn)
@@ -38,7 +38,7 @@ Nice client-side live form validation for Nette Forms 3.0. Script by default wor
 	- [Special features](#special-features)
 	- [Advanced](#advanced)
 
-## Install
+## Installation
 
 ### NPM
 
@@ -55,16 +55,16 @@ The script already contains the `netteForms.js` file, so don't use it again and 
 ### CDN
 
 - Dev: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@master/live-form-validation.js`
-- Stable: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@v1.9.0/live-form-validation.js`
+- Stable: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@v1.10.1/live-form-validation.js`
 
 **Nette**
 
-- Nette 3.0: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@master/live-form-validation.js`
+- Nette 3.0: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@v1.10.1/live-form-validation.js`
 - Nette 2.4: `https://cdn.jsdelivr.net/gh/contributte/live-form-validation@v1.9.0/live-form-validation.js`
 
 ## Usage
 
-Script by default works nicely with Twitter Bootstrap 3, but you can customize the options to fit your exact needs.
+Script by default works nicely with Twitter Bootstrap 4, but you can customize the options to fit your exact needs.
 
 ### Options
 
@@ -112,7 +112,7 @@ Option | Description
 **wait** | delay in ms before validating on keyup/keydown; or use "false" to disable it
 **focusScreenOffsetY** | vertical screen offset in px to scroll after focusing element with error (useful when using fixed navbar menu which may otherwise obscure the element in focus); or use "false" for default behavior
 
-#### Special features
+### Special features
 
 * **Form on load validation** - Adding class `validate-on-load` to form element will execute its validation immediately after page is loaded.
 
@@ -120,13 +120,13 @@ Option | Description
 
 You can edit/replace methods `LiveForm.addError` (shows error message), `LiveForm.removeError` (hides error message), `LiveForm.showValid` (show message if input is correctly filled), `LiveForm.setupHandlers` (sets handlers up for inputs, like focus, blur, onkeyup). These methods can be altered to support some JS framework, ie. jQuery.
 
-If you need re-validate form e.g. fiiling form from AJAX request write code sometibng like that:
+If you need to re-validate a form, e.g. after filling it from an AJAX request, write code like this:
 
 ```javascript
 Nette.validateControl($('#exampleForm-foo'));
 ```
 
-### Authors
+## Credits
 
 This script is based on work of **Robert Pösel**, **zakrava**, **Radek Ježdík**, **MartyIX** and **David Grudl**. Thank you guys.
 
@@ -134,7 +134,7 @@ This script is based on work of **Robert Pösel**, **zakrava**, **Radek Ježdík
 
 See [how to contribute](https://contributte.org/contributing.html) to this package.
 
-This package is currently maintaining by these authors.
+This package is currently maintained by these authors.
 
 <a href="https://github.com/f3l1x">
     <img width="80" height="80" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=80">
