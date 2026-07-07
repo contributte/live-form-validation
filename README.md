@@ -26,18 +26,6 @@ Nice client-side live form validation for Nette Forms 3.0. Script by default wor
 | dev         | `dev-master`  | `master` |
 | stable      | `^1.10.0`     | `master` |
 
-## Contents
-
-- [Installation](#installation)
-	- [NPM](#npm)
-	- [Manually](#manually)
-	- [CDN](#cdn)
-- [Usage](#usage)
-	- [Options](#options)
-	- [Available options](#available-options)
-	- [Special features](#special-features)
-	- [Advanced](#advanced)
-
 ## Installation
 
 ### NPM
@@ -48,7 +36,7 @@ npm install --save live-form-validation
 
 ### Manually
 
-All you need is to link `live-form-validation.js` file from to your HTML document. That's it!
+All you need is to link the `live-form-validation.js` file in your HTML document. That's it!
 
 The script already contains the `netteForms.js` file, so don't use it again and remove it from your HTML document.
 
