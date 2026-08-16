@@ -1,5 +1,7 @@
 ![](https://heatbadger.now.sh/github/readme/contributte/live-form-validation/)
 
+# Contributte / Live Form Validation
+
 <p align=center>
   <a href="https://github.com/contributte/live-form-validation/actions"><img src="https://badgen.net/github/checks/contributte/live-form-validation/master?cache=300"></a>
   <a href="https://www.npmjs.com/package/live-form-validation"><img src="https://badgen.net/npm/dm/live-form-validation"></a>
@@ -19,6 +21,8 @@ Website ðŸš€ <a href="https://contributte.org">contributte.org</a> | Contact ðŸ‘
 
 Nice client-side live form validation for Nette Forms 3.0. Script by default works nicely with Twitter Bootstrap 4.
 
+This README is the package documentation; no separate `.docs` directory is maintained.
+
 ## Versions
 
 | State       | Version       | Branch   |
@@ -32,6 +36,14 @@ Nice client-side live form validation for Nette Forms 3.0. Script by default wor
 
 ```bash
 npm install --save live-form-validation
+```
+
+### Quick start
+
+Include the installed `live-form-validation.js` file in your page. It includes `netteForms.js`, so do not load `netteForms.js` separately.
+
+```html
+<script src="/js/live-form-validation.js"></script>
 ```
 
 ### Manually
