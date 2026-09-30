@@ -312,7 +312,7 @@
 
     LiveForm.getMessageElement = function (el) {
         // For multi elements (with same name) work only with first element attributes
-        if (el.name && el.name.match(/\[\]$/)) {
+        if (el.name && (el.name.match(/\[\]$/) || el.type === 'radio')) {
             el = el.form.elements[el.name].tagName ? el : el.form.elements[el.name][0];
         }
 
@@ -589,6 +589,12 @@
         // LiveForm: addition
         // Fix for CheckboxList - validation rules are present always only on first input
         if (elem.name && elem.name.match(/\[\]$/) && elem.type.toLowerCase() == 'checkbox') {
+            elem = elem.form.elements[elem.name].tagName ? elem : elem.form.elements[elem.name][0];
+        }
+
+        // LiveForm: addition
+        // Fix for RadioList - validation rules are present only on first input
+        if (elem.name && elem.type === 'radio') {
             elem = elem.form.elements[elem.name].tagName ? elem : elem.form.elements[elem.name][0];
         }
 
