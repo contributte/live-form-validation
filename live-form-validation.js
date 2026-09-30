@@ -175,6 +175,10 @@
     };
 
     LiveForm.processServerErrors = function (el) {
+        // Ignore elements with disabled live validation
+        if (this.hasClass(el, this.options.disableLiveValidationClass))
+            return;
+
         var messageEl = this.getMessageElement(el);
         var parentEl = this.getMessageParent(el); // This is parent element which contain the error elements
 
