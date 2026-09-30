@@ -312,8 +312,10 @@
 
     LiveForm.getMessageElement = function (el) {
         // For multi elements (with same name) work only with first element attributes
-        if (el.name && el.name.match(/\[\]$/)) {
-            el = el.form.elements[el.name].tagName ? el : el.form.elements[el.name][0];
+        if (el.name && (el.name.match(/\[\]$/) || el.type === 'radio')) {
+            // namedItem() prevents problem with name 'item' or 'namedItem'
+            var group = el.form.elements.namedItem(el.name);
+            el = !group || group.tagName ? el : group[0];
         }
 
         var id = el.getAttribute('data-lfv-message-id');
@@ -590,6 +592,13 @@
         // Fix for CheckboxList - validation rules are present always only on first input
         if (elem.name && elem.name.match(/\[\]$/) && elem.type.toLowerCase() == 'checkbox') {
             elem = elem.form.elements[elem.name].tagName ? elem : elem.form.elements[elem.name][0];
+        }
+
+        // LiveForm: addition
+        // Fix for RadioList - validation rules are present only on first input
+        if (elem.name && elem.type === 'radio') {
+            var radios = elem.form.elements.namedItem(elem.name);
+            elem = !radios || radios.tagName ? elem : radios[0];
         }
 
         elem = elem.tagName ? elem : elem[0]; // RadioNodeList
