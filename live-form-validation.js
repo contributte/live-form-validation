@@ -726,7 +726,9 @@
      * Check if input is disabled.
      */
     Nette.isDisabled = function (elem) {
-        if (elem.type === 'radio') {
+        // LiveForm: change
+        // CheckboxList is disabled only if all its items are disabled (same as radio list)
+        if (elem.type === 'radio' || (elem.type === 'checkbox' && elem.name && elem.name.match(/\[\]$/))) {
             for (var i = 0, elements = elem.form.elements; i < elements.length; i++) {
                 if (elements[i].name === elem.name && !elements[i].disabled) {
                     return false;
