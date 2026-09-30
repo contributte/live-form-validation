@@ -1044,7 +1044,7 @@
             // LiveForm: change
             // Date/time inputs have ISO string arguments, compare them as strings
             if (Array.isArray(arg) && Nette.isDateTimeInput(elem)) {
-                if (elem.type === 'time' && typeof arg[0] === 'string' && typeof arg[1] === 'string' && arg[0] > arg[1]) {
+                if (elem.type === 'time' && typeof arg[0] === 'string' && typeof arg[1] === 'string' && Nette.normalizeDateTime(arg[0]) > Nette.normalizeDateTime(arg[1])) {
                     // time range over midnight, e.g. 22:00 - 02:00
                     return Nette.validators.min(elem, arg[0], val) || Nette.validators.max(elem, arg[1], val);
                 }
