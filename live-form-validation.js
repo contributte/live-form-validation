@@ -1009,6 +1009,11 @@
                     return null;
                 }
             }
+            // LiveForm: change
+            // Date/time inputs have ISO string arguments, compare them as strings
+            if (Nette.isDateTimeInput(elem) && typeof arg === 'string') {
+                return Nette.normalizeDateTime(val) >= Nette.normalizeDateTime(arg);
+            }
             return arg === null || parseFloat(val) >= arg;
         },
 
@@ -1020,6 +1025,11 @@
                     return null;
                 }
             }
+            // LiveForm: change
+            // Date/time inputs have ISO string arguments, compare them as strings
+            if (Nette.isDateTimeInput(elem) && typeof arg === 'string') {
+                return Nette.normalizeDateTime(val) <= Nette.normalizeDateTime(arg);
+            }
             return arg === null || parseFloat(val) <= arg;
         },
 
@@ -1030,6 +1040,15 @@
                 } else if (elem.validity.badInput) {
                     return null;
                 }
+            }
+            // LiveForm: change
+            // Date/time inputs have ISO string arguments, compare them as strings
+            if (Array.isArray(arg) && Nette.isDateTimeInput(elem)) {
+                if (elem.type === 'time' && typeof arg[0] === 'string' && typeof arg[1] === 'string' && Nette.normalizeDateTime(arg[0]) > Nette.normalizeDateTime(arg[1])) {
+                    // time range over midnight, e.g. 22:00 - 02:00
+                    return Nette.validators.min(elem, arg[0], val) || Nette.validators.max(elem, arg[1], val);
+                }
+                return (arg[0] === null || Nette.validators.min(elem, arg[0], val)) && (arg[1] === null || Nette.validators.max(elem, arg[1], val));
             }
             return Array.isArray(arg) ?
                 ((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
@@ -1256,6 +1275,24 @@
                 target.form['nette-submittedBy'] = target;
             }
         });
+    };
+
+
+    // LiveForm: addition
+    /**
+     * Determines whether the element is a date/time input (Nette DateTimeControl).
+     */
+    Nette.isDateTimeInput = function (elem) {
+        return elem.type in {date: 1, time: 1, 'datetime-local': 1};
+    };
+
+
+    // LiveForm: addition
+    /**
+     * Adds missing seconds to time part (browsers drop ":00" seconds from value), so "10:00" equals "10:00:00".
+     */
+    Nette.normalizeDateTime = function (val) {
+        return String(val).replace(/(^|T)(\d\d:\d\d)$/, '$1$2:00');
     };
 
 
